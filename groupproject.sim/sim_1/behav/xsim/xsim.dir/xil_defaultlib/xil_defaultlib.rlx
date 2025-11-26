@@ -1,0 +1,15 @@
+0.7
+2020.2
+May 22 2025
+00:13:55
+C:/Users/dsteinke/Documents/groupproject/groupproject.sim/sim_1/behav/xsim/glbl.v,1741209010,verilog,,,,glbl,,,,,,,,
+C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sim_1/new/tb_id.v,1764119941,verilog,,,,tb_id,,,../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
+C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sim_1/new/tb_if.v,1764117928,verilog,,,,tb_if,,,../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
+C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/adder.v,1763606664,verilog,,C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/ifid.v,,adder,,,../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
+C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/controlunit.v,1764118762,verilog,,C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/immgen.v,,controlunit,,,../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
+C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/ifid.v,1763604484,verilog,,C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/im.v,,ifid,,,../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
+C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/im.v,1763606497,verilog,,C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/mux.v,,im,,,../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
+C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/immgen.v,1764118227,verilog,,C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/regfile.v,,immgen,,,../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
+C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/mux.v,1763606495,verilog,,C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/pc.v,,mux,,,../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
+C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/pc.v,1763606673,verilog,,C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sim_1/new/tb_if.v,,pc,,,../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
+C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sources_1/new/regfile.v,1764118163,verilog,,C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sim_1/new/tb_id.v,,regfile,,,../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef,,,,,
