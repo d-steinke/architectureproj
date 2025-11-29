@@ -1,0 +1,16 @@
+Time resolution is 1 ps
+Time: 10000 | Reset Released
+Time: 15000 | Writing 100 to x1
+Time: 25000 | Writing 200 to x2
+--- Testing ADD x3, x1, x2 ---
+Instruction: 000c0424
+Opcode: 0100 (Expected 0100)
+RS Read Data:        100 (Expected 100)
+RT Read Data:          0 (Expected 200)
+Control: RegWrite=1 (Exp 1), ALUSrc=0 (Exp 0), ALUOp=000 (Exp 000)
+--- Testing LD x4, x1, -5 ---
+Instruction: ff90400e
+Immediate:          -2 (Expected -5)
+RS Read Data:          0 (Expected 100)
+Control: RegWrite=1 (Exp 1), ALUSrc=1 (Exp 1), MemToReg=1 (Exp 1)
+$finish called at time : 57 ns : File "C:/Users/dsteinke/Documents/groupproject/groupproject.srcs/sim_1/new/tb_id.v" Line 132
