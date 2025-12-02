@@ -1,0 +1,14 @@
+opcode,z,n,branch,memtoreg,add,sub,neg,regwrite,memwrite,ALUSrcA,ALUSrcB,operation
+0000,x,x,0,0,x,x,x,0,0,x,x,NOP
+1111,x,x,0,0,0,0,0,1,0,1,1,SVPC
+1110,x,x,0,0,0,0,0,1,0,0,1,LD
+0011,x,x,0,1,0,0,0,0,1,0,1,ST
+0100,x,x,0,0,0,0,0,1,0,0,0,ADD
+0101,x,x,0,0,0,0,0,1,0,0,1,INC
+0110,x,x,0,0,1,1,0,1,0,0,x,NEG
+0111,x,x,0,0,1,0,1,1,0,0,0,SUB
+1000,x,x,1,0,x,x,x,0,0,x,x,J
+1001,0,x,0,0,x,x,x,0,0,x,x,BRZ
+1001,1,x,1,0,x,x,x,0,0,x,x,BRZ
+1010,x,0,0,0,x,x,x,0,0,x,x,BRN
+1010,x,1,1,0,x,x,x,0,0,x,x,BRN

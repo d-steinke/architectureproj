@@ -28,9 +28,9 @@ module immgen(
 
     always @(*) begin
         if (instruction[31]) begin
-            imm_out = {22'b1111111111111111111111, instruction[31:22]};
+            imm_out = {{22{1'b1}}, instruction[31:22]};
         end else begin
-            imm_out = {22'b0000000000000000000000, instruction[31:22]};
+            imm_out = {{22{1'b0}}, instruction[31:22]};
         end
     end
 

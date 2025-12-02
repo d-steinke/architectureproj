@@ -93,8 +93,12 @@ module controlunit(
                 alu_op = 3'b000;
             end
 
-            OP_J, OP_BRZ, OP_BRN: begin
-                branch = 1;
+            OP_J: begin
+                jump = 1;
+            end
+            
+            OP_BRZ, OP_BRN: begin
+                branch = 1;  // Conditional branch - actual branch taken depends on flags from previous instruction
             end
             
         endcase

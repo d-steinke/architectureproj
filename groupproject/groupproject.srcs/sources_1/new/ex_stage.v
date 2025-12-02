@@ -39,7 +39,7 @@ module ex_stage(
 
     wire [31:0] alu_operand_b;
 
-    mux2to1 EX_ALU_MUX (
+    mux EX_ALU_MUX (
         .in0(id_ex_reg_data2),
         .in1(id_ex_imm),
         .sel(alu_src),
