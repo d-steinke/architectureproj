@@ -74,15 +74,15 @@ module tb_id_stage;
         
         wb_reg_write = 0;
 
-        // Test 1: NOP instruction (0000)
+        // Test 1: NOP instruction (opcode=0000)
         if_id_pc = 32'd0;
-        if_id_instr = 32'b0000_000000_000000_000000_0000000000;
+        if_id_instr = {10'b0, 6'd0, 6'd0, 6'd0, 4'b0000};
         #5;
         $display("Test 1 - NOP: opcode decoded, reg_write=%b (Expected 0) %s",
                  id_reg_write, (id_reg_write == 0) ? "PASS" : "FAIL");
 
-        // Test 2: ADD x5, x1, x2 (0100_000101_000001_000010_0000000000)
-        if_id_instr = 32'b0100_000101_000001_000010_0000000000;
+        // Test 2: ADD x5, x1, x2 (opcode=0100, rd=5, rs=1, rt=2)
+        if_id_instr = {10'b0, 6'd5, 6'd1, 6'd2, 4'b0100};
         #5;
         $display("Test 2 - ADD x5, x1, x2:");
         $display("  rd=%d, rs=%d, rt=%d (Expected 5, 1, 2) %s",
@@ -95,8 +95,8 @@ module tb_id_stage;
                  id_reg_write, id_alu_op,
                  (id_reg_write == 1 && id_alu_op == 3'b000) ? "PASS" : "FAIL");
 
-        // Test 3: SUB x3, x5, x2 (0111_000011_000101_000010_0000000000)
-        if_id_instr = 32'b0111_000011_000101_000010_0000000000;
+        // Test 3: SUB x3, x5, x2 (opcode=0111, rd=3, rs=5, rt=2)
+        if_id_instr = {10'b0, 6'd3, 6'd5, 6'd2, 4'b0111};
         #5;
         $display("Test 3 - SUB x3, x5, x2:");
         $display("  rd=%d, rs=%d, rt=%d (Expected 3, 5, 2) %s",
@@ -105,8 +105,8 @@ module tb_id_stage;
         $display("  alu_op=%b (Expected 101) %s",
                  id_alu_op, (id_alu_op == 3'b101) ? "PASS" : "FAIL");
 
-        // Test 4: INC x10, x1, -5 (0101_001010_000001_010100_1111111011)
-        if_id_instr = 32'b0101_001010_000001_010100_1111111011;
+        // Test 4: INC x10, x1, -5 (opcode=0101, rd=10, rs=1, imm=-5)
+        if_id_instr = {10'b1111111011, 6'd10, 6'd1, 6'd0, 4'b0101};
         #5;
         $display("Test 4 - INC x10, x1, -5:");
         $display("  rd=%d, rs=%d (Expected 10, 1) %s",
@@ -115,8 +115,8 @@ module tb_id_stage;
                  $signed(id_imm), id_alu_src,
                  ($signed(id_imm) == -5 && id_alu_src == 1) ? "PASS" : "FAIL");
 
-        // Test 5: LD x4, x1, 0 (1110_000100_000001_010100_0000000000)
-        if_id_instr = 32'b1110_000100_000001_010100_0000000000;
+        // Test 5: LD x4, x1, 0 (opcode=1110, rd=4, rs=1, imm=0)
+        if_id_instr = {10'b0, 6'd4, 6'd1, 6'd0, 4'b1110};
         #5;
         $display("Test 5 - LD x4, x1, 0:");
         $display("  rd=%d, rs=%d (Expected 4, 1) %s",
@@ -125,8 +125,8 @@ module tb_id_stage;
                  id_reg_write, id_mem_to_reg,
                  (id_reg_write == 1 && id_mem_to_reg == 1) ? "PASS" : "FAIL");
 
-        // Test 6: ST x3, x1, 10 (0011_011010_000001_000011_0000000000)
-        if_id_instr = 32'b0011_011010_000001_000011_0000000000;
+        // Test 6: ST x3, x1, 10 (opcode=0011, rs=1, rt=3, imm=10)
+        if_id_instr = {10'd10, 6'd0, 6'd1, 6'd3, 4'b0011};
         #5;
         $display("Test 6 - ST x3, x1, 10:");
         $display("  rs=%d, rt=%d (Expected 1, 3) %s",
@@ -135,8 +135,8 @@ module tb_id_stage;
                  id_mem_write, id_reg_write,
                  (id_mem_write == 1 && id_reg_write == 0) ? "PASS" : "FAIL");
 
-        // Test 7: NEG x6, x5 (0110_000110_000101_010100_0000000000)
-        if_id_instr = 32'b0110_000110_000101_010100_0000000000;
+        // Test 7: NEG x6, x5 (opcode=0110, rd=6, rs=5)
+        if_id_instr = {10'b0, 6'd6, 6'd5, 6'd0, 4'b0110};
         #5;
         $display("Test 7 - NEG x6, x5:");
         $display("  rd=%d, rs=%d (Expected 6, 5) %s",
@@ -144,15 +144,15 @@ module tb_id_stage;
         $display("  alu_op=%b (Expected 110) %s",
                  id_alu_op, (id_alu_op == 3'b110) ? "PASS" : "FAIL");
 
-        // Test 8: J x7 (1000_000111_010100_010100_0000000000)
-        if_id_instr = 32'b1000_000111_010100_010100_0000000000;
+        // Test 8: J x7 (opcode=1000, rd=7)
+        if_id_instr = {10'b0, 6'd7, 6'd0, 6'd0, 4'b1000};
         #5;
         $display("Test 8 - J x7:");
         $display("  jump=%b (Expected 1), reg_write=%b (Expected 0) %s",
                  id_jump, id_reg_write, (id_jump == 1 && id_reg_write == 0) ? "PASS" : "FAIL");
 
-        // Test 9: BRZ 0 (1001_010100_010100_010100_0000000000)
-        if_id_instr = 32'b1001_010100_010100_010100_0000000000;
+        // Test 9: BRZ (opcode=1001, rs=0)
+        if_id_instr = {10'b0, 6'd0, 6'd0, 6'd0, 4'b1001};
         #5;
         $display("Test 9 - BRZ:");
         $display("  branch=%b (Expected 1), reg_write=%b (Expected 0) %s",

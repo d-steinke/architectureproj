@@ -1,0 +1,20 @@
+IM_SIMPLE: mem[0]=0000028f mem[1]=01410005 mem[2]=00c20005 mem[3]=00030424 mem[4]=00000000
+========== ID/EX PIPELINE REGISTER TESTBENCH ==========
+
+EX_STAGE @0 PC=xxxxxxxx MEM_WRITE=z
+Test 1 - Reset: ex_pc=         0 (Expected 0), ex_rd= 0 (Expected 0) PASS
+IDEX @15000 latched PC=00000064 instr_fields rd=5 rs=1 rt=2 imm=333 (0000014d) opc=zzzz regw=1 memtoreg=0
+IDEX @25000 latched PC=00000064 instr_fields rd=5 rs=1 rt=2 imm=333 (0000014d) opc=zzzz regw=1 memtoreg=0
+Test 2 - Capture data: ex_pc=       100 (Expected 100), ex_imm=       333 (Expected 333) PASS
+Test 3 - Indices: ex_rd= 5 (Expected 5), ex_rs= 1 (Expected 1), ex_rt= 2 (Expected 2) PASS
+Test 4 - Data: ex_reg_data1=      1111 (Expected 1111), ex_reg_data2=      2222 (Expected 2222) PASS
+Test 5 - Control: reg_write=1, mem_to_reg=0, mem_write=0, alu_src=1 PASS
+Test 6 - ALU op=000 (Expected 000), branch=0, jump=0 PASS
+IDEX @35000 latched PC=000000c8 instr_fields rd=5 rs=1 rt=2 imm=333 (0000014d) opc=zzzz regw=1 memtoreg=0
+IDEX @45000 latched PC=000000c8 instr_fields rd=5 rs=1 rt=2 imm=333 (0000014d) opc=zzzz regw=1 memtoreg=0
+Test 7 - Update: ex_pc=       200 (Expected 200), ex_reg_data1=      3333 (Expected 3333) PASS
+Test 8 - Updated control: alu_op=110 (Expected 110), branch=1, jump=1 PASS
+
+========== TEST COMPLETE ==========
+
+groupproject/groupproject.srcs/sim_1/new/tb_idex.v:146: $finish called at 50000 (1ps)

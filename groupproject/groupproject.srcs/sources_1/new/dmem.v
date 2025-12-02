@@ -30,7 +30,7 @@ module dmem (
 
     parameter MEM_SIZE = 256;
     reg [31:0] mem [0:MEM_SIZE-1];
-    integer i;
+    integer i, j;
 
     // Combinational read
     always @(*) begin
@@ -41,8 +41,8 @@ module dmem (
         end
     end
 
-    // Synchronous write
-    always @(posedge clk) begin
+    // Synchronous write — also accept immediate writes when mem_write rises
+    always @(posedge clk or posedge mem_write) begin
         if (mem_write) begin
             if (address >= 0 && address < MEM_SIZE) begin
                 mem[address] <= write_data;
@@ -50,11 +50,24 @@ module dmem (
         end
     end
 
-    // Initialize memory with some test data
+    // Initialize memory with test array data
     initial begin
         for (i = 0; i < MEM_SIZE; i = i + 1) begin
             mem[i] = 32'h00000000;
         end
+        
+        // Prepopulate array at addresses 100-109 (safe from any hardcoded jumps)
+        // This will be the input array for the 1D media program
+        mem[100] = 32'd5;
+        mem[101] = 32'd10;
+        mem[102] = 32'd3;
+        mem[103] = 32'd7;
+        mem[104] = 32'd2;
+        mem[105] = 32'd8;
+        mem[106] = 32'd1;
+        mem[107] = 32'd9;
+        mem[108] = 32'd4;
+        mem[109] = 32'd6;
     end
 
 endmodule

@@ -26,9 +26,11 @@ module ex_stage(
     input wire [31:0] id_ex_reg_data1, 
     input wire [31:0] id_ex_reg_data2, 
     input wire [31:0] id_ex_imm,       
+    input wire [3:0] id_ex_opcode,
     
     input wire alu_src,               
     input wire [2:0] alu_op,          
+    input wire id_ex_mem_write, // New input for debugging
     
     output wire [31:0] ex_alu_result,  
     output wire [31:0] ex_write_data,  
@@ -38,6 +40,8 @@ module ex_stage(
 );
 
     wire [31:0] alu_operand_b;
+    wire [31:0] alu_result_wire;
+    parameter OP_SVPC = 4'b1111;
 
     mux EX_ALU_MUX (
         .in0(id_ex_reg_data2),
@@ -50,12 +54,12 @@ module ex_stage(
         .a(id_ex_reg_data1),    
         .b(alu_operand_b),     
         .alu_control(alu_op),  
-        .result(ex_alu_result),
+        .result(alu_result_wire),
         .zero(zero_flag),
         .negative(neg_flag)
     );
-
     
+    assign ex_alu_result = (id_ex_opcode == OP_SVPC) ? id_ex_pc + 1 : alu_result_wire;
     
     adder EX_PC_ADDER (
         .a(id_ex_pc),
@@ -64,5 +68,9 @@ module ex_stage(
     );
     
     assign ex_write_data = id_ex_reg_data2;
+
+    always @(*) begin
+        $display("EX_STAGE @%0t PC=%h MEM_WRITE=%b", $time, id_ex_pc, id_ex_mem_write);
+    end
 
 endmodule

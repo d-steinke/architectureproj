@@ -1,0 +1,328 @@
+IM_SIMPLE: mem[0]=0000028f mem[1]=01410005 mem[2]=00c20005 mem[3]=00030424 mem[4]=00000000
+========================================
+  Simple CPU Pipeline Test
+========================================
+
+EX_STAGE @0 PC=xxxxxxxx MEM_WRITE=z
+tb_cpu_simple.CPU_UUT.ID_STAGE.ID_REG_FILE: regfile reset at 0
+tb_cpu_simple.CPU_UUT.ID_STAGE.ID_REG_FILE: regfile reset at 5000
+EX_STAGE @5000 PC=00000000 MEM_WRITE=z
+tb_cpu_simple.CPU_UUT.ID_STAGE.ID_REG_FILE: regfile reset at 15000
+Time: 20000 | Reset Released
+
+Program (First 5 Instructions):
+mem[0]: SVPC x40, 1   (x40 = PC+1 = 1)
+mem[1]: INC  x1, x0, 5 (x1 = 0 + 5 = 5)
+mem[2]: INC  x2, x0, 3 (x2 = 0 + 3 = 3)
+mem[3]: ADD  x3, x1, x2 (x3 = x1 + x2 = 5 + 3 = 8)
+mem[4]: NOP
+
+
+Running program...
+
+EXWB @25000 latched alu=0000000X mem=00000000 rd=0 rt=0 opcode=x regw=0 memtoreg=0
+IDEX @25000 latched PC=00000000 instr_fields rd=0 rs=0 rt=40 imm=0 (00000000) opc=1111 regw=1 memtoreg=0
+ID_STAGE @25000 PC=00000000 INSTR=0000028f OPC=1111 RS=0 RT=40 RD=0 IMM=0 (00000000) MEM_WRITE=0
+ID: INC instr=01410005, rd= 1, imm=5 (005)
+ID_STAGE @35000 PC=00000001 INSTR=01410005 OPC=0101 RS=0 RT=0 RD=1 IMM=5 (00000005) MEM_WRITE=0
+IDEX @35000 latched PC=00000001 instr_fields rd=1 rs=0 rt=0 imm=5 (00000005) opc=0101 regw=1 memtoreg=0
+EXWB @35000 latched alu=00000001 mem=00000000 rd=0 rt=40 opcode=f regw=1 memtoreg=0
+EX_STAGE @35000 PC=00000001 MEM_WRITE=z
+ID: INC instr=00c20005, rd= 1, imm=3 (003)
+ID: INC instr=00c20005, rd= 2, imm=3 (003)
+tb_cpu_simple.CPU_UUT.ID_STAGE.ID_REG_FILE: write reg 40 <= 00000001 at 45000 (we=1 read1=0 read2=0)
+EXWB @45000 latched alu=00000005 mem=00000000 rd=1 rt=0 opcode=5 regw=1 memtoreg=0
+IDEX @45000 latched PC=00000002 instr_fields rd=2 rs=0 rt=0 imm=3 (00000003) opc=0101 regw=1 memtoreg=0
+ID_STAGE @45000 PC=00000002 INSTR=00c20005 OPC=0101 RS=0 RT=0 RD=2 IMM=3 (00000003) MEM_WRITE=0
+EX_STAGE @45000 PC=00000002 MEM_WRITE=z
+ID: INC instr=00030424, rd= 2, imm=0 (000)
+tb_cpu_simple.CPU_UUT.ID_STAGE.ID_REG_FILE: write reg 1 <= 00000005 at 55000 (we=1 read1=1 read2=2)
+ID_STAGE @55000 PC=00000003 INSTR=00030424 OPC=0100 RS=1 RT=2 RD=3 IMM=0 (00000000) MEM_WRITE=0
+IDEX @55000 latched PC=00000003 instr_fields rd=3 rs=1 rt=2 imm=0 (00000000) opc=0100 regw=1 memtoreg=0
+EXWB @55000 latched alu=00000003 mem=00000000 rd=2 rt=0 opcode=5 regw=1 memtoreg=0
+EX_STAGE @55000 PC=00000003 MEM_WRITE=z
+tb_cpu_simple.CPU_UUT.ID_STAGE.ID_REG_FILE: write reg 2 <= 00000003 at 65000 (we=1 read1=0 read2=0)
+EXWB @65000 latched alu=00000008 mem=00000003 rd=3 rt=2 opcode=4 regw=1 memtoreg=0
+IDEX @65000 latched PC=00000004 instr_fields rd=0 rs=0 rt=0 imm=0 (00000000) opc=0000 regw=0 memtoreg=0
+ID_STAGE @65000 PC=00000004 INSTR=00000000 OPC=0000 RS=0 RT=0 RD=0 IMM=0 (00000000) MEM_WRITE=0
+EX_STAGE @65000 PC=00000004 MEM_WRITE=z
+tb_cpu_simple.CPU_UUT.ID_STAGE.ID_REG_FILE: write reg 3 <= 00000008 at 75000 (we=1 read1=x read2=x)
+ID_STAGE @75000 PC=00000005 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @75000 latched PC=00000005 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @75000 latched alu=00000000 mem=00000000 rd=0 rt=0 opcode=0 regw=0 memtoreg=0
+EX_STAGE @75000 PC=00000005 MEM_WRITE=z
+EXWB @85000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @85000 latched PC=00000006 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @85000 PC=00000006 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @85000 PC=00000006 MEM_WRITE=z
+ID_STAGE @95000 PC=00000007 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @95000 latched PC=00000007 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @95000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @95000 PC=00000007 MEM_WRITE=z
+EXWB @105000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @105000 latched PC=00000008 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @105000 PC=00000008 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @105000 PC=00000008 MEM_WRITE=z
+ID_STAGE @115000 PC=00000009 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @115000 latched PC=00000009 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @115000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @115000 PC=00000009 MEM_WRITE=z
+EXWB @125000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @125000 latched PC=0000000a instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @125000 PC=0000000a INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @125000 PC=0000000a MEM_WRITE=z
+ID_STAGE @135000 PC=0000000b INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @135000 latched PC=0000000b instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @135000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @135000 PC=0000000b MEM_WRITE=z
+EXWB @145000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @145000 latched PC=0000000c instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @145000 PC=0000000c INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @145000 PC=0000000c MEM_WRITE=z
+ID_STAGE @155000 PC=0000000d INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @155000 latched PC=0000000d instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @155000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @155000 PC=0000000d MEM_WRITE=z
+EXWB @165000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @165000 latched PC=0000000e instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @165000 PC=0000000e INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @165000 PC=0000000e MEM_WRITE=z
+ID_STAGE @175000 PC=0000000f INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @175000 latched PC=0000000f instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @175000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @175000 PC=0000000f MEM_WRITE=z
+EXWB @185000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @185000 latched PC=00000010 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @185000 PC=00000010 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @185000 PC=00000010 MEM_WRITE=z
+ID_STAGE @195000 PC=00000011 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @195000 latched PC=00000011 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @195000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @195000 PC=00000011 MEM_WRITE=z
+EXWB @205000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @205000 latched PC=00000012 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @205000 PC=00000012 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @205000 PC=00000012 MEM_WRITE=z
+ID_STAGE @215000 PC=00000013 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @215000 latched PC=00000013 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @215000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @215000 PC=00000013 MEM_WRITE=z
+EXWB @225000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @225000 latched PC=00000014 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @225000 PC=00000014 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @225000 PC=00000014 MEM_WRITE=z
+ID_STAGE @235000 PC=00000015 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @235000 latched PC=00000015 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @235000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @235000 PC=00000015 MEM_WRITE=z
+EXWB @245000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @245000 latched PC=00000016 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @245000 PC=00000016 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @245000 PC=00000016 MEM_WRITE=z
+ID_STAGE @255000 PC=00000017 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @255000 latched PC=00000017 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @255000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @255000 PC=00000017 MEM_WRITE=z
+EXWB @265000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @265000 latched PC=00000018 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @265000 PC=00000018 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @265000 PC=00000018 MEM_WRITE=z
+ID_STAGE @275000 PC=00000019 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @275000 latched PC=00000019 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @275000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @275000 PC=00000019 MEM_WRITE=z
+EXWB @285000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @285000 latched PC=0000001a instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @285000 PC=0000001a INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @285000 PC=0000001a MEM_WRITE=z
+ID_STAGE @295000 PC=0000001b INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @295000 latched PC=0000001b instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @295000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @295000 PC=0000001b MEM_WRITE=z
+EXWB @305000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @305000 latched PC=0000001c instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @305000 PC=0000001c INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @305000 PC=0000001c MEM_WRITE=z
+ID_STAGE @315000 PC=0000001d INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @315000 latched PC=0000001d instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @315000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @315000 PC=0000001d MEM_WRITE=z
+EXWB @325000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @325000 latched PC=0000001e instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @325000 PC=0000001e INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @325000 PC=0000001e MEM_WRITE=z
+ID_STAGE @335000 PC=0000001f INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @335000 latched PC=0000001f instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @335000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @335000 PC=0000001f MEM_WRITE=z
+EXWB @345000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @345000 latched PC=00000020 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @345000 PC=00000020 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @345000 PC=00000020 MEM_WRITE=z
+ID_STAGE @355000 PC=00000021 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @355000 latched PC=00000021 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @355000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @355000 PC=00000021 MEM_WRITE=z
+EXWB @365000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @365000 latched PC=00000022 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @365000 PC=00000022 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @365000 PC=00000022 MEM_WRITE=z
+ID_STAGE @375000 PC=00000023 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @375000 latched PC=00000023 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @375000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @375000 PC=00000023 MEM_WRITE=z
+EXWB @385000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @385000 latched PC=00000024 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @385000 PC=00000024 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @385000 PC=00000024 MEM_WRITE=z
+ID_STAGE @395000 PC=00000025 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @395000 latched PC=00000025 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @395000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @395000 PC=00000025 MEM_WRITE=z
+EXWB @405000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @405000 latched PC=00000026 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @405000 PC=00000026 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @405000 PC=00000026 MEM_WRITE=z
+ID_STAGE @415000 PC=00000027 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @415000 latched PC=00000027 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @415000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @415000 PC=00000027 MEM_WRITE=z
+EXWB @425000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @425000 latched PC=00000028 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @425000 PC=00000028 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @425000 PC=00000028 MEM_WRITE=z
+ID_STAGE @435000 PC=00000029 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @435000 latched PC=00000029 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @435000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @435000 PC=00000029 MEM_WRITE=z
+EXWB @445000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @445000 latched PC=0000002a instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @445000 PC=0000002a INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @445000 PC=0000002a MEM_WRITE=z
+ID_STAGE @455000 PC=0000002b INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @455000 latched PC=0000002b instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @455000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @455000 PC=0000002b MEM_WRITE=z
+EXWB @465000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @465000 latched PC=0000002c instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @465000 PC=0000002c INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @465000 PC=0000002c MEM_WRITE=z
+ID_STAGE @475000 PC=0000002d INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @475000 latched PC=0000002d instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @475000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @475000 PC=0000002d MEM_WRITE=z
+EXWB @485000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @485000 latched PC=0000002e instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @485000 PC=0000002e INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @485000 PC=0000002e MEM_WRITE=z
+ID_STAGE @495000 PC=0000002f INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @495000 latched PC=0000002f instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @495000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @495000 PC=0000002f MEM_WRITE=z
+EXWB @505000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @505000 latched PC=00000030 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @505000 PC=00000030 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @505000 PC=00000030 MEM_WRITE=z
+ID_STAGE @515000 PC=00000031 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @515000 latched PC=00000031 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @515000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @515000 PC=00000031 MEM_WRITE=z
+EXWB @525000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @525000 latched PC=00000032 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @525000 PC=00000032 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @525000 PC=00000032 MEM_WRITE=z
+ID_STAGE @535000 PC=00000033 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @535000 latched PC=00000033 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @535000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @535000 PC=00000033 MEM_WRITE=z
+EXWB @545000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @545000 latched PC=00000034 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @545000 PC=00000034 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @545000 PC=00000034 MEM_WRITE=z
+ID_STAGE @555000 PC=00000035 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @555000 latched PC=00000035 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @555000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @555000 PC=00000035 MEM_WRITE=z
+EXWB @565000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @565000 latched PC=00000036 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @565000 PC=00000036 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @565000 PC=00000036 MEM_WRITE=z
+ID_STAGE @575000 PC=00000037 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @575000 latched PC=00000037 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @575000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @575000 PC=00000037 MEM_WRITE=z
+EXWB @585000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @585000 latched PC=00000038 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @585000 PC=00000038 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @585000 PC=00000038 MEM_WRITE=z
+ID_STAGE @595000 PC=00000039 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @595000 latched PC=00000039 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @595000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @595000 PC=00000039 MEM_WRITE=z
+EXWB @605000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @605000 latched PC=0000003a instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @605000 PC=0000003a INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @605000 PC=0000003a MEM_WRITE=z
+ID_STAGE @615000 PC=0000003b INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @615000 latched PC=0000003b instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @615000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @615000 PC=0000003b MEM_WRITE=z
+EXWB @625000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @625000 latched PC=0000003c instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @625000 PC=0000003c INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @625000 PC=0000003c MEM_WRITE=z
+ID_STAGE @635000 PC=0000003d INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @635000 latched PC=0000003d instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @635000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @635000 PC=0000003d MEM_WRITE=z
+EXWB @645000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @645000 latched PC=0000003e instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @645000 PC=0000003e INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @645000 PC=0000003e MEM_WRITE=z
+ID_STAGE @655000 PC=0000003f INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @655000 latched PC=0000003f instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @655000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @655000 PC=0000003f MEM_WRITE=z
+EXWB @665000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @665000 latched PC=00000040 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @665000 PC=00000040 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @665000 PC=00000040 MEM_WRITE=z
+ID_STAGE @675000 PC=00000041 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @675000 latched PC=00000041 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @675000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @675000 PC=00000041 MEM_WRITE=z
+EXWB @685000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @685000 latched PC=00000042 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @685000 PC=00000042 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @685000 PC=00000042 MEM_WRITE=z
+ID_STAGE @695000 PC=00000043 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @695000 latched PC=00000043 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @695000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @695000 PC=00000043 MEM_WRITE=z
+EXWB @705000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+IDEX @705000 latched PC=00000044 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+ID_STAGE @705000 PC=00000044 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+EX_STAGE @705000 PC=00000044 MEM_WRITE=z
+ID_STAGE @715000 PC=00000045 INSTR=xxxxxxxx OPC=xxxx RS=x RT=x RD=x IMM=X (00000Xxx) MEM_WRITE=0
+IDEX @715000 latched PC=00000045 instr_fields rd=x rs=x rt=x imm=X (00000Xxx) opc=xxxx regw=0 memtoreg=0
+EXWB @715000 latched alu=xxxxxxxx mem=xxxxxxxx rd=x rt=x opcode=x regw=0 memtoreg=0
+EX_STAGE @715000 PC=00000045 MEM_WRITE=z
+========================================
+Register Values After Execution:
+========================================
+x1  (reg 1)  = 5 (expected: 5)
+x2  (reg 2)  = 3 (expected: 3)
+x3  (reg 3)  = 8 (expected: 8)
+x40 (reg 40) = 1 (expected: 1)
+
+
+✓ x1  = 5  (PASS)
+✓ x2  = 3  (PASS)
+✓ x3  = 8  (PASS)
+✓ x40 = 1  (PASS)
+
+========================================
+Test Complete
+========================================
+
+groupproject/groupproject.srcs/sim_1/new/tb_cpu_simple.v:92: $finish called at 720000 (1ps)

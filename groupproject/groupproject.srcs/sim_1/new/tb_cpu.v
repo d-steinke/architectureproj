@@ -8,6 +8,7 @@ module tb_cpu;
 
     reg clk;
     reg rst;
+    integer cycle;
 
     cpu CPU_UUT (
         .clk(clk),
@@ -20,35 +21,10 @@ module tb_cpu;
         forever #5 clk = ~clk;
     end
 
-    // Instruction decoder function
-    function [128*8-1:0] decode_instruction(input [31:0] instr);
-        reg [3:0] opcode;
-        reg [5:0] rd, rs, rt;
-        reg [9:0] imm;
-        reg [128*8-1:0] decoded;
-        
-        begin
-            opcode = instr[3:0];
-            rd = instr[21:16];
-            rs = instr[15:10];
-            rt = instr[9:4];
-            imm = instr[31:22];
-            
-            case(opcode)
-                4'b0000: decoded = $sformatf("NOP");
-                4'b1111: decoded = $sformatf("SVPC x%0d", rd);
-                4'b1110: decoded = $sformatf("LD x%0d, x%0d, %d", rd, rs, $signed(imm));
-                4'b0011: decoded = $sformatf("ST x%0d, x%0d, %d", rt, rs, $signed(imm));
-                4'b0100: decoded = $sformatf("ADD x%0d, x%0d, x%0d", rd, rs, rt);
-                4'b0101: decoded = $sformatf("INC x%0d, x%0d, %d", rd, rs, $signed(imm));
-                4'b0110: decoded = $sformatf("NEG x%0d, x%0d", rd, rs);
-                4'b0111: decoded = $sformatf("SUB x%0d, x%0d, x%0d", rd, rs, rt);
-                4'b1000: decoded = $sformatf("J x%0d", rd);
-                4'b1001: decoded = $sformatf("BRZ %d", $signed(imm));
-                4'b1010: decoded = $sformatf("BRN %d", $signed(imm));
-                default: decoded = $sformatf("UNKNOWN");
-            endcase
-        end
+    // Simple instruction decoder - just return the opcode
+    function [31:0] get_opcode;
+        input [31:0] instr;
+        get_opcode = instr[3:0];
     endfunction
 
     // Test stimulus
@@ -63,27 +39,49 @@ module tb_cpu;
         rst = 0;
         $display("Time: %0t | Reset Released\n", $time);
 
+        // Initialize registers x2 and x3 with base addresses
+        CPU_UUT.ID_STAGE.ID_REG_FILE.initialize_register(2, 100);
+        CPU_UUT.ID_STAGE.ID_REG_FILE.initialize_register(3, 200);
+        $display("Time: %0t | Initialized x2=100, x3=200\n", $time);
+
+        // Display INITIAL ARRAY from data memory (addresses 100-109)
+        $display("========================================");
+        $display("INITIAL DATA ARRAY (from dmem[100-109]):");
+        $display("========================================");
+        #5;
+        $display("dmem[100] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[100]);
+        $display("dmem[101] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[101]);
+        $display("dmem[102] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[102]);
+        $display("dmem[103] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[103]);
+        $display("dmem[104] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[104]);
+        $display("dmem[105] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[105]);
+        $display("dmem[106] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[106]);
+        $display("dmem[107] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[107]);
+        $display("dmem[108] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[108]);
+        $display("dmem[109] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[109]);
+        $display("\n");
+
         // Display first 16 instructions from im.v
         $display("Program Trace (First 16 Instructions):");
-        $display("Addr | Instruction (Binary)                  | Decoded");
-        $display("-----|----------------------------------------|----------------------------------");
+        $display("Addr | Instruction (Binary)");
+        $display("-----|----------------------------------------");
         
-        $display("  0  | 1111_000000_000000_101000_0000010011 | %s", decode_instruction(32'b1111_000000_000000_101000_0000010011));
-        $display("  1  | 1111_000000_000000_101001_0001000010 | %s", decode_instruction(32'b1111_000000_000000_101001_0001000010));
-        $display("  2  | 1111_000000_000000_101001_0001000010 | %s", decode_instruction(32'b1111_000000_000000_101001_0001000010));
-        $display("  3  | 1111_000000_000000_101011_0000101100 | %s", decode_instruction(32'b1111_000000_000000_101011_0000101100));
-        $display("  4  | 1111_000000_000000_101100_0000110001 | %s", decode_instruction(32'b1111_000000_000000_101100_0000110001));
-        $display("  5  | 1111_000000_000000_101101_0000010010 | %s", decode_instruction(32'b1111_000000_000000_101101_0000010010));
-        $display("  6  | 1111_000000_000000_101110_0000010010 | %s", decode_instruction(32'b1111_000000_000000_101110_0000010010));
-        $display("  7  | 1111_000000_000000_101111_0000010100 | %s", decode_instruction(32'b1111_000000_000000_101111_0000010100));
-        $display("  8  | 0101_000000_000001_000100_1111111111 | %s", decode_instruction(32'b0101_000000_000001_000100_1111111111));
-        $display("  9  | 1110_000000_000010_010100_0000000000 | %s", decode_instruction(32'b1110_000000_000010_010100_0000000000));
-        $display("  10 | 0000_000000_000000_000000_0000000000 | %s", decode_instruction(32'b0000_000000_000000_000000_0000000000));
-        $display("  11 | 0000_000000_000000_000000_0000000000 | %s", decode_instruction(32'b0000_000000_000000_000000_0000000000));
-        $display("  12 | 0011_010100_000011_000000_0000000000 | %s", decode_instruction(32'b0011_010100_000011_000000_0000000000));
-        $display("  13 | 0111_000000_000000_000000_0000000000 | %s", decode_instruction(32'b0111_000000_000000_000000_0000000000));
-        $display("  14 | 0000_000000_000000_000000_0000000000 | %s", decode_instruction(32'b0000_000000_000000_000000_0000000000));
-        $display("  15 | 0000_000000_000000_000000_0000000000 | %s", decode_instruction(32'b0000_000000_000000_000000_0000000000));
+        $display("  0  | 1111_000000_000000_101000_0000010011");
+        $display("  1  | 1111_000000_000000_101001_0001000010");
+        $display("  2  | 1111_000000_000000_101010_0000100101");
+        $display("  3  | 1111_000000_000000_101011_0000101100");
+        $display("  4  | 1111_000000_000000_101100_0000110001");
+        $display("  5  | 1111_000000_000000_101101_0000010010");
+        $display("  6  | 1111_000000_000000_101110_0000010010");
+        $display("  7  | 1111_000000_000000_101111_0000010100");
+        $display("  8  | 0101_000000_000001_000100_1111111111");
+        $display("  9  | 1110_000000_000010_010100_0000000000");
+        $display("  10 | 0000_000000_000000_000000_0000000000");
+        $display("  11 | 0000_000000_000000_000000_0000000000");
+        $display("  12 | 0011_010100_000011_000000_0000000000");
+        $display("  13 | 0111_000000_000000_000000_0000000000");
+        $display("  14 | 0000_000000_000000_000000_0000000000");
+        $display("  15 | 0000_000000_000000_000000_0000000000");
         $display("\n");
 
         // ===== PHASE 1: Load Constants (mem[0-7]) =====
@@ -141,7 +139,35 @@ module tb_cpu;
         $display("Running Extended Execution...");
         $display("Observing pipeline steady state and forwarding");
         $display("========================================\n");
-        #500;
+        #100000;  // Run for much longer to allow algorithm to complete
+
+        $display("\n========================================");
+        $display("FINAL DATA ARRAYS:");
+        $display("========================================");
+        $display("\nINPUT ARRAY (dmem[100-109]):");
+        $display("dmem[100] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[100]);
+        $display("dmem[101] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[101]);
+        $display("dmem[102] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[102]);
+        $display("dmem[103] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[103]);
+        $display("dmem[104] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[104]);
+        $display("dmem[105] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[105]);
+        $display("dmem[106] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[106]);
+        $display("dmem[107] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[107]);
+        $display("dmem[108] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[108]);
+        $display("dmem[109] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[109]);
+        
+        $display("\nOUTPUT ARRAY (dmem[200-209]):");
+        $display("dmem[200] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[200]);
+        $display("dmem[201] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[201]);
+        $display("dmem[202] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[202]);
+        $display("dmem[203] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[203]);
+        $display("dmem[204] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[204]);
+        $display("dmem[205] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[205]);
+        $display("dmem[206] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[206]);
+        $display("dmem[207] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[207]);
+        $display("dmem[208] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[208]);
+        $display("dmem[209] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[209]);
+        $display("========================================\n");
 
         $display("\n========================================");
         $display("  CPU Execution Complete");
@@ -151,29 +177,28 @@ module tb_cpu;
         $finish;
     end
 
-    // Detailed cycle-by-cycle trace
-    initial begin
-        integer cycle;
-        cycle = 0;
-        @(negedge rst);  // Wait for reset to be released
-        
-        #10;  // Let pipeline stabilize
-        
-        $display("Cycle-by-Cycle Trace:");
-        $display("Cyc | PC  | IF/ID Instr      | Decoded Instr         | Flush");
-        $display("----|-----|-----------------|-------------------------|------");
-        
-        repeat(60) begin
-            $display("%3d | %3d | %h | %-23s | %b", 
-                     cycle, 
-                     CPU_UUT.if_pc, 
-                     CPU_UUT.if_id_instr,
-                     decode_instruction(CPU_UUT.if_id_instr),
-                     CPU_UUT.if_flush);
-            @(posedge clk);
-            cycle = cycle + 1;
-        end
-    end
+    // Cycle-by-cycle trace (disabled for extended run - uncomment to enable)
+    // initial begin
+    //     cycle = 0;
+    //     @(negedge rst);  // Wait for reset to be released
+    //     
+    //     #10;  // Let pipeline stabilize
+    //     
+    //     $display("Cycle-by-Cycle Trace:");
+    //     $display("Cyc | PC  | IF/ID Instr      | Opcode | Flush");
+    //     $display("----|-----|-----------------|--------|------");
+    //     
+    //     repeat(60) begin
+    //         $display("%3d | %3d | %h | %4b   | %b", 
+    //                  cycle, 
+    //                  CPU_UUT.if_pc, 
+    //                  CPU_UUT.if_id_instr,
+    //                  CPU_UUT.if_id_instr[3:0],
+    //                  CPU_UUT.if_flush);
+    //         @(posedge clk);
+    //         cycle = cycle + 1;
+    //     end
+    // end
 
 endmodule
 

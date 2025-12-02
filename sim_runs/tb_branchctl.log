@@ -1,0 +1,14 @@
+IM_SIMPLE: mem[0]=0000028f mem[1]=01410005 mem[2]=00c20005 mem[3]=00030424 mem[4]=00000000
+========== BRANCH CONTROL TESTBENCH ==========
+
+EX_STAGE @0 PC=xxxxxxxx MEM_WRITE=z
+Test 1 - BRZ (1001) with zero_flag=0: branch_taken=1 (Expected 1) PASS
+Test 2 - BRZ (1001) with zero_flag=1: branch_taken=0 (Expected 0) PASS
+Test 3 - BRN (1010) with neg_flag=1: branch_taken=1 (Expected 1) PASS
+Test 4 - BRN (1010) with neg_flag=0: branch_taken=0 (Expected 0) PASS
+Test 5 - NOP (0000): branch_taken=0 (Expected 0) PASS
+Test 6 - ADD (0100): branch_taken=0 (Expected 0) PASS
+
+========== TEST COMPLETE ==========
+
+groupproject/groupproject.srcs/sim_1/new/tb_branchctl.v:66: $finish called at 30000 (1ps)

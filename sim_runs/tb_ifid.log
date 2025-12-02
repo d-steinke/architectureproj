@@ -1,0 +1,11 @@
+IM_SIMPLE: mem[0]=0000028f mem[1]=01410005 mem[2]=00c20005 mem[3]=00030424 mem[4]=00000000
+======= IF/ID PIPELINE TESTBENCH =======
+EX_STAGE @0 PC=xxxxxxxx MEM_WRITE=z
+Test 1 - Initial: instr_out=00000000, pc_out=00000000
+Test 2 - After 1st cycle: instr=aaaaaaaa, pc=00000001 PASS
+Test 3 - After 2nd cycle: instr=bbbbbbbb, pc=00000002 PASS
+Test 4 - After 3rd cycle: instr=cccccccc, pc=00000003 PASS
+Test 5 - All 1s: instr=ffffffff, pc=ffffffff PASS
+Test 6 - All 0s: instr=00000000, pc=00000000 PASS
+=========================================
+groupproject/groupproject.srcs/sim_1/new/tb_ifid.v:99: $finish called at 55000 (1ps)

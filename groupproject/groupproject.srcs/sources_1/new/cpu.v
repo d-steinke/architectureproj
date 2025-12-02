@@ -43,6 +43,7 @@ module cpu (
     wire [31:0] id_reg_data2;
     wire [31:0] id_imm;
     wire [5:0] id_rd, id_rs, id_rt;
+    wire [3:0] id_opcode;
     wire id_reg_write, id_mem_to_reg, id_mem_write;
     wire id_alu_src, id_branch, id_jump;
     wire [2:0] id_alu_op;
@@ -67,6 +68,8 @@ module cpu (
     wire [31:0] ex_wb_alu_result;
     wire [31:0] ex_wb_mem_data;
     wire [5:0] ex_wb_rd;
+    wire [5:0] ex_wb_rt;
+    wire [3:0] ex_wb_opcode;
     wire ex_wb_zero_flag, ex_wb_neg_flag;
     wire ex_wb_reg_write, ex_wb_mem_to_reg;
     
@@ -74,6 +77,8 @@ module cpu (
     wire [31:0] mem_alu_result;
     wire [31:0] mem_read_data;
     wire [5:0] mem_rd;
+    wire [5:0] mem_rt;
+    wire [3:0] mem_opcode;
     wire mem_zero_flag, mem_neg_flag;
     wire mem_reg_write, mem_mem_to_reg;
     
@@ -99,12 +104,6 @@ module cpu (
         .pc_out(if_pc),
         .next_pc(if_next_pc),
         .flush(if_flush)
-    );
-
-    // Instruction memory (read from PC)
-    im IF_IMEM (
-        .address(if_pc),
-        .instruction()  // Will be captured in IF/ID
     );
 
     // ===== IF/ID PIPELINE REGISTER =====
@@ -206,11 +205,12 @@ module cpu (
         .id_ex_imm(id_ex_imm),
         .alu_src(id_ex_alu_src),
         .alu_op(id_ex_alu_op),
+        .id_ex_mem_write(id_ex_mem_write), // Pass through id_ex_mem_write
         .ex_alu_result(ex_alu_result),
         .ex_write_data(ex_write_data),
         .ex_branch_target(ex_branch_target),
         .zero_flag(ex_zero_flag),
-        .neg_flag(ex_neg_flag)
+        .neg_flag(neg_flag)
     );
 
     // ===== EX/WB PIPELINE REGISTER =====

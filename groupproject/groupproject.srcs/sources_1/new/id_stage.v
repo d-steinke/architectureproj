@@ -41,6 +41,7 @@ module id_stage (
     output wire [5:0] id_rd,
     output wire [5:0] id_rs,
     output wire [5:0] id_rt,
+    output wire [3:0] id_opcode,
     
     // Control Signals
     output wire id_reg_write,
@@ -58,11 +59,26 @@ module id_stage (
     wire [5:0] rt = if_id_instr[9:4];
     wire [5:0] rd = if_id_instr[21:16];
 
+    // Debug output for INC instructions
+    always @(*) begin
+        if (opcode == 4'b0101) begin  // INC
+            $display("ID: INC instr=%h, rd=%d, imm=%0d (%h)", if_id_instr, rd, $signed(if_id_instr[31:22]), if_id_instr[31:22]);
+        end
+    end
+
+    // General per-cycle decode debug
+    always @(posedge clk) begin
+        if (!rst) begin
+            $display("ID_STAGE @%0t PC=%h INSTR=%h OPC=%b RS=%0d RT=%0d RD=%0d IMM=%0d (%h) MEM_WRITE=%b", $time, if_id_pc, if_id_instr, opcode, rs, rt, rd, $signed(id_imm), id_imm, id_mem_write);
+        end
+    end
+
     // Pass through PC and register indices
     assign id_pc = if_id_pc;
     assign id_rs = rs;
     assign id_rt = rt;
     assign id_rd = rd;
+    assign id_opcode = opcode;
 
     // Instantiate control unit
     controlunit ID_CONTROL (
@@ -86,8 +102,11 @@ module id_stage (
         .write_reg(wb_write_reg),
         .write_data(wb_write_data),
         .read_data1(id_reg_data1),
-        .read_data2(id_reg_data2)
+        .read_data2(id_reg_data2),
+        .debug_r1(),
+        .debug_r2()
     );
+
 
     // Instantiate immediate generator
     immgen ID_IMM_GEN (

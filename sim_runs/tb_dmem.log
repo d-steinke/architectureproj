@@ -1,0 +1,14 @@
+IM_SIMPLE: mem[0]=0000028f mem[1]=01410005 mem[2]=00c20005 mem[3]=00030424 mem[4]=00000000
+========== DATA MEMORY TESTBENCH ==========
+
+EX_STAGE @0 PC=xxxxxxxx MEM_WRITE=z
+Test 1 - Read addr 0: read_data=00000000 (Expected 0) PASS
+Test 3 - Read addr 0 after write: read_data=deadbeef (Expected DEAD_BEEF) PASS
+Test 5 - Read addr 10: read_data=cafebabe (Expected CAFE_BABE) PASS
+Test 6 - Read addr 20: read_data=55555555 (Expected 5555_5555) PASS
+Test 7 - Read out of bounds addr 300: read_data=00000000 (Expected 0) PASS
+Test 8 - Read addr 0 (write disabled): read_data=deadbeef (Expected DEAD_BEEF) PASS
+
+========== TEST COMPLETE ==========
+
+groupproject/groupproject.srcs/sim_1/new/tb_dmem.v:95: $finish called at 105000 (1ps)

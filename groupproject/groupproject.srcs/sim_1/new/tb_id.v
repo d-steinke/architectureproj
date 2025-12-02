@@ -90,43 +90,54 @@ module tb_id;
         rst = 0;
         $display("Time: %0t | Reset Released", $time);
 
-        @(posedge clk);
+        @(negedge clk);
         wb_reg_write = 1;
         wb_write_reg = 6'd1;     // x1
         wb_write_data = 32'd100;
         $display("Time: %0t | Writing 100 to x1", $time);
 
-        @(posedge clk);
+        @(negedge clk);
+        wb_reg_write = 1;
         wb_write_reg = 6'd2;     // x2
         wb_write_data = 32'd200;
         $display("Time: %0t | Writing 200 to x2", $time);
 
         // Disable Write-Back for testing read
+        @(negedge clk);
         wb_reg_write = 0;
 
-        // Assembly: ADD x3, x1, x2 (x3 = x1 + x2)        
+        // Assembly: ADD x3, x1, x2 (x3 = x1 + x2)
+        // Format: y[10] | rd[6] | rs[6] | rt[6] | opcode[4]
+        // Encoding: 0000000000_000011_000001_000010_0100
         @(negedge clk); 
-        instruction = 32'h000C0424; 
+        instruction = 32'b0000000000_000011_000001_000010_0100; 
         
         #2;
         $display("--- Testing ADD x3, x1, x2 ---");
         $display("Instruction: %h", instruction);
         $display("Opcode: %b (Expected 0100)", instruction[3:0]);
+        $display("RS[15:10]=%d (Expected 1), RT[9:4]=%d (Expected 2)", instruction[15:10], instruction[9:4]);
         $display("RS Read Data: %d (Expected 100)", read_data1);
         $display("RT Read Data: %d (Expected 200)", read_data2);
-        $display("Control: RegWrite=%b (Exp 1), ALUSrc=%b (Exp 0), ALUOp=%b (Exp 000)", reg_write, alu_src, alu_op);
+        $display("Control: RegWrite=%b (Exp 1), ALUSrc=%b (Exp 0), ALUOp=%b (Exp 000) %s", 
+                 reg_write, alu_src, alu_op,
+                 (read_data1 == 100 && read_data2 == 200 && alu_op == 3'b000) ? "PASS" : "FAIL");
 
         // Assembly: LD x4, x1, -5 (x4 = Mem[x1 - 5])
-        
+        // Format: y[10] | rd[6] | rs[6] | rt[6] | opcode[4]
+        // Encoding: 1111111011_000100_000001_xxxxxx_1110 (y=-5, rd=4, rs=1, opcode=14)
         @(posedge clk); 
-        instruction = 32'hFF90400E;
+        instruction = 32'b1111111011_000100_000001_000000_1110;
 
         #2;
         $display("--- Testing LD x4, x1, -5 ---");
         $display("Instruction: %h", instruction);
         $display("Immediate: %d (Expected -5)", $signed(imm_out));
+        $display("RS[15:10]=%d (Expected 1)", instruction[15:10]);
         $display("RS Read Data: %d (Expected 100)", read_data1);
-        $display("Control: RegWrite=%b (Exp 1), ALUSrc=%b (Exp 1), MemToReg=%b (Exp 1)", reg_write, alu_src, mem_to_reg);
+        $display("Control: RegWrite=%b (Exp 1), ALUSrc=%b (Exp 1), MemToReg=%b (Exp 1) %s", 
+                 reg_write, alu_src, mem_to_reg,
+                 (read_data1 == 100 && $signed(imm_out) == -5 && mem_to_reg == 1) ? "PASS" : "FAIL");
 
         #20;
         $finish;

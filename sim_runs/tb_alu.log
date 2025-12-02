@@ -1,0 +1,16 @@
+IM_SIMPLE: mem[0]=0000028f mem[1]=01410005 mem[2]=00c20005 mem[3]=00030424 mem[4]=00000000
+============ ALU TESTBENCH ============
+EX_STAGE @0 PC=xxxxxxxx MEM_WRITE=z
+Test 1 - ADD 10+20: Expected 30, Got         30 | Zero=0, Neg=0 PASS
+Test 2 - ADD 100+(-100): Expected 0, Zero=1 | Got          0, Zero=1 PASS
+Test 3 - ADD (-1)+(-1): Expected -2, Neg=1 | Got fffffffe, Neg=1 PASS
+Test 4 - SUB 50-30: Expected 20, Got         20 PASS
+Test 5 - SUB 100-100: Expected 0, Zero=1 | Got          0, Zero=1 PASS
+Test 6 - SUB 10-50: Expected -40, Neg=1 | Got ffffffd8, Neg=1 PASS
+Test 7 - NEG 42: Expected -42, Got ffffffd6, Neg=1 PASS
+Test 8 - NEG 0: Expected 0, Zero=1 | Got          0, Zero=1 PASS
+Test 9 - NEG (-1): Expected 1, Got          1 PASS
+Test 10 - PASS: Expected deadbeef, Got deadbeef PASS
+Test 11 - Default case (001): Got 00000000 Default returns 0 - PASS
+========================================
+groupproject/groupproject.srcs/sim_1/new/tb_alu.v:113: $finish called at 55000 (1ps)

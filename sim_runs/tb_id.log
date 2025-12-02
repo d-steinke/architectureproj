@@ -1,0 +1,23 @@
+IM_SIMPLE: mem[0]=0000028f mem[1]=01410005 mem[2]=00c20005 mem[3]=00030424 mem[4]=00000000
+EX_STAGE @0 PC=xxxxxxxx MEM_WRITE=z
+tb_id.ID_REG_FILE: regfile reset at 0
+tb_id.ID_REG_FILE: regfile reset at 5000
+Time: 10000 | Reset Released
+Time: 10000 | Writing 100 to x1
+tb_id.ID_REG_FILE: write reg 1 <= 00000064 at 15000 (we=1 read1=0 read2=0)
+Time: 20000 | Writing 200 to x2
+tb_id.ID_REG_FILE: write reg 2 <= 000000c8 at 25000 (we=1 read1=0 read2=0)
+--- Testing ADD x3, x1, x2 ---
+Instruction: 00030424
+Opcode: 0100 (Expected 0100)
+RS[15:10]= 1 (Expected 1), RT[9:4]= 2 (Expected 2)
+RS Read Data:        100 (Expected 100)
+RT Read Data:        200 (Expected 200)
+Control: RegWrite=1 (Exp 1), ALUSrc=0 (Exp 0), ALUOp=000 (Exp 000) PASS
+--- Testing LD x4, x1, -5 ---
+Instruction: fec4040e
+Immediate:          -5 (Expected -5)
+RS[15:10]= 1 (Expected 1)
+RS Read Data:        100 (Expected 100)
+Control: RegWrite=1 (Exp 1), ALUSrc=1 (Exp 1), MemToReg=1 (Exp 1) PASS
+groupproject/groupproject.srcs/sim_1/new/tb_id.v:143: $finish called at 67000 (1ps)

@@ -1,0 +1,25 @@
+Test Summary
+============
+
+tb_id: PASS
+tb_if: PASS
+tb_ifid: PASS
+tb_adder: PASS
+tb_mux: PASS
+tb_pc: PASS
+tb_alu: PASS
+tb_immgen: PASS
+tb_regfile: PASS
+tb_controlunit: PASS
+tb_cpu: PASS
+tb_branchctl: PASS
+tb_dmem: PASS
+tb_ex_stage: PASS
+tb_exwb: PASS
+tb_forwarding: PASS
+tb_idex: PASS
+tb_mem_stage: PASS
+tb_wb_stage: PASS
+tb_id_stage: PASS
+tb_cpu_simple: PASS
+tb_minimal: PASS

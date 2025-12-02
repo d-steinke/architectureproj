@@ -1,0 +1,42 @@
+IM_SIMPLE: mem[0]=0000028f mem[1]=01410005 mem[2]=00c20005 mem[3]=00030424 mem[4]=00000000
+======= REGISTER FILE TESTBENCH =======
+EX_STAGE @0 PC=xxxxxxxx MEM_WRITE=z
+tb_regfile.UUT: regfile reset at 0
+TB: posedge 5000 reg_write_en=0 write_reg=x write_data=xxxxxxxx read_reg1=1 read_reg2=2
+tb_regfile.UUT: regfile reset at 5000
+Test 1 - After Reset: x1=         0, x2=         0 PASS
+Test 2a - Writing 100 to x1...
+TB: posedge 15000 reg_write_en=1 write_reg=1 write_data=00000064 read_reg1=1 read_reg2=2
+tb_regfile.UUT: write reg 1 <= 00000064 at 15000 (we=1 read1=1 read2=2)
+Test 2b - Read x1: Expected 100, Got        100 PASS
+Test 3a - Writing 200 to x2...
+TB: posedge 25000 reg_write_en=0 write_reg=1 write_data=00000064 read_reg1=1 read_reg2=2
+tb_regfile.UUT: write reg 2 <= 000000c8 at 25000 (we=1 read1=1 read2=2)
+TB: posedge 35000 reg_write_en=1 write_reg=2 write_data=000000c8 read_reg1=1 read_reg2=2
+tb_regfile.UUT: write reg 2 <= 000000c8 at 35000 (we=1 read1=1 read2=2)
+Test 3b - Read x1=       100, x2=       200 PASS
+TB: posedge 45000 reg_write_en=0 write_reg=2 write_data=000000c8 read_reg1=1 read_reg2=2
+tb_regfile.UUT: write reg 5 <= deadbeef at 45000 (we=1 read1=1 read2=2)
+TB: posedge 55000 reg_write_en=1 write_reg=5 write_data=deadbeef read_reg1=1 read_reg2=2
+tb_regfile.UUT: write reg 5 <= deadbeef at 55000 (we=1 read1=1 read2=2)
+TB: posedge 65000 reg_write_en=1 write_reg=10 write_data=cafebabe read_reg1=1 read_reg2=2
+tb_regfile.UUT: write reg 10 <= cafebabe at 65000 (we=1 read1=1 read2=2)
+Test 4 - Multi-read x5=deadbeef, x10=cafebabe PASS
+TB: posedge 75000 reg_write_en=0 write_reg=10 write_data=cafebabe read_reg1=5 read_reg2=10
+TB: posedge 85000 reg_write_en=0 write_reg=10 write_data=cafebabe read_reg1=5 read_reg2=10
+TB: posedge 95000 reg_write_en=0 write_reg=15 write_data=12345678 read_reg1=15 read_reg2=10
+TB: posedge 105000 reg_write_en=0 write_reg=15 write_data=12345678 read_reg1=15 read_reg2=10
+Test 5 - No write when disabled: x15=         0 PASS
+tb_regfile.UUT: write reg 0 <= ffffffff at 105000 (we=1 read1=15 read2=10)
+TB: posedge 115000 reg_write_en=1 write_reg=63 write_data=55555555 read_reg1=15 read_reg2=10
+tb_regfile.UUT: write reg 63 <= 55555555 at 115000 (we=1 read1=15 read2=10)
+TB: posedge 125000 reg_write_en=0 write_reg=63 write_data=55555555 read_reg1=0 read_reg2=63
+TB: posedge 135000 reg_write_en=0 write_reg=63 write_data=55555555 read_reg1=0 read_reg2=63
+Test 6 - Boundary x0=ffffffff, x63=55555555 PASS
+TB: posedge 145000 reg_write_en=0 write_reg=63 write_data=55555555 read_reg1=0 read_reg2=63
+tb_regfile.UUT: regfile reset at 145000
+TB: posedge 155000 reg_write_en=0 write_reg=63 write_data=55555555 read_reg1=1 read_reg2=63
+TB: posedge 165000 reg_write_en=0 write_reg=63 write_data=55555555 read_reg1=1 read_reg2=63
+Test 7 - After reset: x1=         0, x63=         0 PASS
+========================================
+groupproject/groupproject.srcs/sim_1/new/tb_regfile.v:141: $finish called at 165000 (1ps)

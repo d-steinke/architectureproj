@@ -1,0 +1,10 @@
+IM_SIMPLE: mem[0]=0000028f mem[1]=01410005 mem[2]=00c20005 mem[3]=00030424 mem[4]=00000000
+========== MUX TESTBENCH ==========
+EX_STAGE @0 PC=xxxxxxxx MEM_WRITE=z
+Test 1 - sel=0: Expected aaaaaaaa, Got aaaaaaaa PASS
+Test 2 - sel=1: Expected bbbbbbbb, Got bbbbbbbb PASS
+Test 3 - Toggle: PASS
+Test 4 - PC+1 path: Expected 1001, Got       1001 PASS
+Test 5 - Branch target: Expected 100, Got        100 PASS
+====================================
+groupproject/groupproject.srcs/sim_1/new/tb_mux.v:59: $finish called at 35000 (1ps)

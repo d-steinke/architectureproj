@@ -50,6 +50,8 @@ module controlunit(
         alu_src = 0; branch = 0; jump = 0; 
         alu_op = 3'b000; 
 
+        $display("CONTROL_UNIT @%0t Opcode=%b", $time, opcode); // Debug statement
+
         case (opcode)
             OP_NOP: begin 
             end
@@ -90,6 +92,7 @@ module controlunit(
 
             OP_SVPC: begin
                 reg_write = 1;
+                alu_src = 1;
                 alu_op = 3'b000;
             end
 

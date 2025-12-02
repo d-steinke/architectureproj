@@ -32,6 +32,7 @@ module idex (
     input wire [5:0] id_rd,
     input wire [5:0] id_rs,
     input wire [5:0] id_rt,
+    input wire [3:0] id_opcode,
     
     // Control Signals from ID Stage
     input wire id_reg_write,
@@ -50,6 +51,7 @@ module idex (
     output reg [5:0] ex_rd,
     output reg [5:0] ex_rs,
     output reg [5:0] ex_rt,
+    output reg [3:0] ex_opcode,
     
     // Control Signals to EX Stage
     output reg ex_reg_write,
@@ -94,6 +96,9 @@ module idex (
             ex_alu_op <= id_alu_op;
             ex_branch <= id_branch;
             ex_jump <= id_jump;
+            ex_opcode <= id_opcode;
+            // Debug: show values latched into ID/EX
+            $display("IDEX @%0t latched PC=%h instr_fields rd=%0d rs=%0d rt=%0d imm=%0d (%h) opc=%b regw=%b memtoreg=%b", $time, id_pc, id_rd, id_rs, id_rt, $signed(id_imm), id_imm, id_opcode, id_reg_write, id_mem_to_reg);
         end
     end
 
