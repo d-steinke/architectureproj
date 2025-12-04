@@ -70,6 +70,7 @@ module controlunit(
                 alu_src_a = 0;
                 alu_src_b = 1; 
                 alu_op = 3'b000; 
+                preserve_flags = 1;
             end
             
             OP_ST: begin
@@ -78,6 +79,7 @@ module controlunit(
                 alu_src_a = 0;
                 alu_src_b = 1; 
                 alu_op = 3'b000; 
+                preserve_flags = 1;
             end
             
             OP_ADD: begin
