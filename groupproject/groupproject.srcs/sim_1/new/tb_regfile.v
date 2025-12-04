@@ -30,12 +30,6 @@ module tb_regfile;
         forever #5 clk = ~clk;
     end
 
-    // Debug: show write signals at each clock edge
-    always @(posedge clk) begin
-        $display("TB: posedge %0t reg_write_en=%b write_reg=%0d write_data=%h read_reg1=%0d read_reg2=%0d", 
-                 $time, reg_write_en, write_reg, write_data, read_reg1, read_reg2);
-    end
-
     // Helper task to perform a synchronous write (stable before posedge)
     task do_write;
         input [5:0] regnum;

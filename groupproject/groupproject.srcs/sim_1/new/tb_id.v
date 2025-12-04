@@ -56,9 +56,7 @@ module tb_id;
         .write_reg(wb_write_reg),       // Input from WB stage
         .write_data(wb_write_data),     // Input from WB stage
         .read_data1(read_data1),
-        .read_data2(read_data2),
-        .debug_r1(),                    // Added to match module definition
-        .debug_r2()                     // Added to match module definition
+        .read_data2(read_data2)
     );
 
     immgen ID_IMM_GEN (

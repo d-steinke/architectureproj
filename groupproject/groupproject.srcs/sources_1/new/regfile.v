@@ -29,9 +29,7 @@ module regfile(
     input wire [5:0] write_reg,   
     input wire [31:0] write_data,  
     output [31:0] read_data1,
-    output [31:0] read_data2,
-    output wire [31:0] debug_r1,
-    output wire [31:0] debug_r2
+    output [31:0] read_data2
 );
 
     reg [31:0] registers [0:63];
@@ -55,9 +53,6 @@ module regfile(
             end
         end
     end
-
-    assign debug_r1 = registers[1];
-    assign debug_r2 = registers[2];
 
     task initialize_register;
         input [5:0] reg_index;
