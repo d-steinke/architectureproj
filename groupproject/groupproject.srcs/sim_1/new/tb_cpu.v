@@ -59,7 +59,7 @@ module tb_cpu;
             $display("Simulation timed out!");
         end
         
-        #200; // Wait for pipeline to finish pending instructions
+        #500; // Wait for pipeline to finish pending instructions
 
         $display("\nFINAL DATA ARRAYS:");
         $display("INPUT ARRAY (dmem[2-8]):");
@@ -79,6 +79,9 @@ module tb_cpu;
         $display("dmem[75] = %0d (Expected 7)", CPU_UUT.MEM_STAGE.DATA_MEM.mem[75]);
         $display("dmem[76] = %0d (Expected 8)", CPU_UUT.MEM_STAGE.DATA_MEM.mem[76]);
         $display("dmem[77] = %0d (Expected 8)", CPU_UUT.MEM_STAGE.DATA_MEM.mem[77]);
+
+        $display("\nNEGATE TEST:");
+        $display("x30 = %0d (Expected -2)", $signed(CPU_UUT.ID_STAGE.ID_REG_FILE.registers[30]));
 
         if (CPU_UUT.MEM_STAGE.DATA_MEM.mem[71] == 3 &&
             CPU_UUT.MEM_STAGE.DATA_MEM.mem[72] == 3 &&

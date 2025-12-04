@@ -66,8 +66,6 @@ module dmem (
         mem[6] = 32'd2;
         mem[7] = 32'd9;
         mem[8] = 32'd8;
-
-        // Output Array will be written by CPU to addresses 71-77
     end
 
 endmodule
