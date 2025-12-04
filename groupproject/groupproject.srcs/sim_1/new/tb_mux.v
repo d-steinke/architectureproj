@@ -59,4 +59,9 @@ module tb_mux;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_mux.vcd");
+        $dumpvars(0, tb_mux);
+    end
 endmodule

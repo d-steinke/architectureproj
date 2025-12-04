@@ -29,6 +29,7 @@ module if_stage (
     input wire [31:0] branch_target,    // Target address (from EX stage)
     input wire [31:0] id_pc,            // Current PC (from IF/ID pipeline)
     input wire [3:0] id_opcode,         // Current instruction opcode (from IF/ID pipeline)
+    input wire [3:0] id_ex_opcode,      // Opcode from ID/EX pipeline (for branch evaluation)
     input wire jump,                    // Jump signal from control unit (J instruction)
     input wire branch,                  // Branch signal (BRZ/BRN instruction)
     input wire prev_zero_flag,          // Zero flag from previous instruction (from EX/WB pipeline)
@@ -52,7 +53,7 @@ module if_stage (
 
     // Determine if conditional branch should be taken
     branchctl BRANCH_LOGIC (
-        .opcode(id_opcode),
+        .opcode(id_ex_opcode),
         .zero_flag(prev_zero_flag),
         .neg_flag(prev_neg_flag),
         .branch_taken(branch_taken)

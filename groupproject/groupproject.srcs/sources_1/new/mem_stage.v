@@ -66,11 +66,5 @@ module mem_stage (
     assign mem_reg_write = ex_reg_write;
     assign mem_mem_to_reg = ex_mem_to_reg;
 
-    always @(posedge clk) begin
-        if (ex_mem_write) begin
-            $display("MEM_STAGE @%0t: ST store to addr %h, data %h", $time, ex_alu_result, ex_write_data);
-        end
-    end
-
 endmodule
 

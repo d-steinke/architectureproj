@@ -141,4 +141,9 @@ module tb_controlunit;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_controlunit.vcd");
+        $dumpvars(0, tb_controlunit);
+    end
 endmodule

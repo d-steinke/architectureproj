@@ -169,4 +169,9 @@ module tb_id_stage;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_id_stage.vcd");
+        $dumpvars(0, tb_id_stage);
+    end
 endmodule

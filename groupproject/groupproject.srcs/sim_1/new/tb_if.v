@@ -114,4 +114,9 @@ module tb_if;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_if.vcd");
+        $dumpvars(0, tb_if);
+    end
 endmodule

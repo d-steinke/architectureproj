@@ -20,20 +20,16 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
+
 module id_stage (
     input wire clk,
     input wire rst,
-    
-    // From IF/ID Pipeline
     input wire [31:0] if_id_instr,
     input wire [31:0] if_id_pc,
-    
-    // Writeback from WB Stage (for register writes)
     input wire wb_reg_write,
     input wire [5:0] wb_write_reg,
     input wire [31:0] wb_write_data,
     
-    // Outputs to ID/EX Pipeline
     output wire [31:0] id_pc,
     output wire [31:0] id_reg_data1,
     output wire [31:0] id_reg_data2,
@@ -43,72 +39,58 @@ module id_stage (
     output wire [5:0] id_rt,
     output wire [3:0] id_opcode,
     
-    // Control Signals
     output wire id_reg_write,
     output wire id_mem_to_reg,
     output wire id_mem_write,
-    output wire id_alu_src,
+    output wire id_alu_src_a,
+    output wire id_alu_src_b,
     output wire [2:0] id_alu_op,
     output wire id_branch,
-    output wire id_jump
+    output wire id_jump,
+    output wire id_preserve_flags
 );
 
-    // Extract fields from instruction
+    // Instruction format: [31:22]=y [21:16]=rd [15:10]=rs [9:4]=rt [3:0]=opcode
     wire [3:0] opcode = if_id_instr[3:0];
-    wire [5:0] rs = if_id_instr[15:10];
     wire [5:0] rt = if_id_instr[9:4];
+    wire [5:0] rs = if_id_instr[15:10];
     wire [5:0] rd = if_id_instr[21:16];
+    wire [9:0] imm  = if_id_instr[31:22];
+    
+    // All instructions use rs for read_reg1
+    wire [5:0] read_reg1_sel = rs;
 
-    // Debug output for INC instructions
-    always @(*) begin
-        if (opcode == 4'b0101) begin  // INC
-            $display("ID: INC instr=%h, rd=%d, imm=%0d (%h)", if_id_instr, rd, $signed(if_id_instr[31:22]), if_id_instr[31:22]);
-        end
-    end
-
-    // General per-cycle decode debug
-    always @(posedge clk) begin
-        if (!rst) begin
-            $display("ID_STAGE @%0t PC=%h INSTR=%h OPC=%b RS=%0d RT=%0d RD=%0d IMM=%0d (%h) MEM_WRITE=%b", $time, if_id_pc, if_id_instr, opcode, rs, rt, rd, $signed(id_imm), id_imm, id_mem_write);
-        end
-    end
-
-    // Pass through PC and register indices
     assign id_pc = if_id_pc;
     assign id_rs = rs;
     assign id_rt = rt;
     assign id_rd = rd;
     assign id_opcode = opcode;
 
-    // Instantiate control unit
     controlunit ID_CONTROL (
         .opcode(opcode),
         .reg_write(id_reg_write),
         .mem_to_reg(id_mem_to_reg),
         .mem_write(id_mem_write),
-        .alu_src(id_alu_src),
+        .alu_src_a(id_alu_src_a),
+        .alu_src_b(id_alu_src_b),
         .alu_op(id_alu_op),
         .branch(id_branch),
-        .jump(id_jump)
+        .jump(id_jump),
+        .preserve_flags(id_preserve_flags)
     );
 
-    // Instantiate register file
     regfile ID_REG_FILE (
         .clk(clk),
         .rst(rst),
         .reg_write_en(wb_reg_write),
-        .read_reg1(rs),
+        .read_reg1(read_reg1_sel),
         .read_reg2(rt),
         .write_reg(wb_write_reg),
         .write_data(wb_write_data),
         .read_data1(id_reg_data1),
-        .read_data2(id_reg_data2),
-        .debug_r1(),
-        .debug_r2()
+        .read_data2(id_reg_data2)
     );
 
-
-    // Instantiate immediate generator
     immgen ID_IMM_GEN (
         .instruction(if_id_instr),
         .imm_out(id_imm)

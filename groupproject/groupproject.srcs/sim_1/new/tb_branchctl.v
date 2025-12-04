@@ -66,4 +66,9 @@ module tb_branchctl;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_branchctl.vcd");
+        $dumpvars(0, tb_branchctl);
+    end
 endmodule

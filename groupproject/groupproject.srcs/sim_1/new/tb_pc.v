@@ -68,4 +68,9 @@ module tb_pc;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_pc.vcd");
+        $dumpvars(0, tb_pc);
+    end
 endmodule

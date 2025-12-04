@@ -1,0 +1,26 @@
+# Simulation artifacts
+sim_runs/
+*.log
+*.vvp
+*.compile.err
+*.vcd
+
+# Vivado generated files
+groupproject.runs/
+groupproject.cache/
+groupproject.hw/
+groupproject.ip_user_files/
+
+# Ignore simulation outputs but keep configuration
+groupproject.sim/**/*
+!groupproject.sim/**/*.wcfg
+
+# Vivado journal and log files
+*.jou
+*.pb
+*.wdb
+*.str
+*.sdb
+*.rlx
+*.svtype
+*.exe

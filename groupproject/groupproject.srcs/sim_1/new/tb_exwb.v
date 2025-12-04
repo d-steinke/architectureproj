@@ -108,4 +108,9 @@ module tb_exwb;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_exwb.vcd");
+        $dumpvars(0, tb_exwb);
+    end
 endmodule

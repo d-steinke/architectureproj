@@ -9,6 +9,7 @@ module tb_cpu;
     reg clk;
     reg rst;
     integer cycle;
+    integer i;
 
     cpu CPU_UUT (
         .clk(clk),
@@ -19,6 +20,19 @@ module tb_cpu;
     initial begin
         clk = 0;
         forever #5 clk = ~clk;
+    end
+    
+    // Cycle Counter Logic
+    initial begin
+        cycle = 0; // 1. Initialize to 0 at time 0
+    end
+
+    always @(posedge clk) begin
+        if (rst) begin
+            cycle <= 0; // Optional: Reset cycle count on reset
+        end else begin
+            cycle <= cycle + 1; // 2. Increment every rising edge
+        end
     end
 
     // Simple instruction decoder - just return the opcode
@@ -39,10 +53,11 @@ module tb_cpu;
         rst = 0;
         $display("Time: %0t | Reset Released\n", $time);
 
-        // Initialize registers x2 and x3 with base addresses
-        CPU_UUT.ID_STAGE.ID_REG_FILE.initialize_register(2, 100);
-        CPU_UUT.ID_STAGE.ID_REG_FILE.initialize_register(3, 200);
-        $display("Time: %0t | Initialized x2=100, x3=200\n", $time);
+        // Initialize registers for median filter program
+        CPU_UUT.ID_STAGE.ID_REG_FILE.initialize_register(1, 100); // x1 = input base address
+        CPU_UUT.ID_STAGE.ID_REG_FILE.initialize_register(2, 200); // x2 = output base address
+        CPU_UUT.ID_STAGE.ID_REG_FILE.initialize_register(3, 10);  // x3 = array size
+        $display("Time: %0t | Initialized x1=100, x2=200, x3=10\n", $time);
 
         // Display INITIAL ARRAY from data memory (addresses 100-109)
         $display("========================================");
@@ -66,80 +81,66 @@ module tb_cpu;
         $display("Addr | Instruction (Binary)");
         $display("-----|----------------------------------------");
         
-        $display("  0  | 1111_000000_000000_101000_0000010011");
-        $display("  1  | 1111_000000_000000_101001_0001000010");
-        $display("  2  | 1111_000000_000000_101010_0000100101");
-        $display("  3  | 1111_000000_000000_101011_0000101100");
-        $display("  4  | 1111_000000_000000_101100_0000110001");
-        $display("  5  | 1111_000000_000000_101101_0000010010");
-        $display("  6  | 1111_000000_000000_101110_0000010010");
-        $display("  7  | 1111_000000_000000_101111_0000010100");
-        $display("  8  | 0101_000000_000001_000100_1111111111");
-        $display("  9  | 1110_000000_000010_010100_0000000000");
-        $display("  10 | 0000_000000_000000_000000_0000000000");
-        $display("  11 | 0000_000000_000000_000000_0000000000");
-        $display("  12 | 0011_010100_000011_000000_0000000000");
-        $display("  13 | 0111_000000_000000_000000_0000000000");
-        $display("  14 | 0000_000000_000000_000000_0000000000");
-        $display("  15 | 0000_000000_000000_000000_0000000000");
+        $display("  0  | 0111_001111_001111_001111_0000000000  // SUB x15,x15,x15");
+        $display("  1  | 0101_000000_001111_001110_0000000001  // INC x14,x15,1");
+        $display("  2  | 0111_000101_000011_001110_0000000000  // SUB x5,x3,x14");
+        $display("  3  | 1110_000000_001000_000001_0000000000  // LD x8,x1,0");
+        $display("  4  | 0011_001000_000010_000000_0000000000  // ST x8,x2,0");
+        $display("  5  | 0100_000110_000001_000101_0000000000  // ADD x6,x1,x5");
+        $display("  6  | 0100_000111_000010_000101_0000000000  // ADD x7,x2,x5");
+        $display("  7  | 1110_000000_001000_000110_0000000000  // LD x8,x6,0");
+        $display("  8  | 0011_001000_000111_000000_0000000000  // ST x8,x7,0");
+        $display("  9  | 0101_000000_001111_000100_0000000001  // INC x4,x15,1");
+        $display("  10 | 1111_000000_000000_010101_0000100111  // SVPC x21,39");
+        $display("  11 | 1111_000000_000000_010110_0000000101  // SVPC x22,5");
+        $display("  12 | 1111_000000_000000_010100_0000000001  // SVPC x20,1");
+        $display("  13 | 0111_000101_000100_001101_0000000000  // SUB x13,x4,x5");
+        $display("  14 | 1010_010110_000000_010110_0000000000  // BRN x22");
+        $display("  15 | 1000_010101_000000_010101_0000000000  // J x21");
         $display("\n");
 
-        // ===== PHASE 1: Load Constants (mem[0-7]) =====
+        // ===== PHASE 1: Setup (mem[0-9]) =====
         $display("========================================");
-        $display("PHASE 1: Load Constants into Registers");
-        $display("mem[0-7]: SVPC instructions load PC+1 into x40-x47");
+        $display("PHASE 1: Initialization");
+        $display("mem[0-2]: Create constant registers x15=0, x14=1, x5=N-1");
+        $display("mem[3-8]: Handle boundary elements b[0] and b[N-1]");
+        $display("mem[9]: Initialize loop counter x4=1");
         $display("========================================\n");
-        #200;
+        #50;
 
-        // ===== PHASE 2: INC and LD (mem[8-9]) =====
+        // ===== PHASE 2: Jump Table Setup (mem[10-12]) =====
         $display("========================================");
-        $display("PHASE 2: INC and Load");
-        $display("mem[8]: INC x1, x0, -1 (x1 = 0 + (-1) = -1)");
-        $display("mem[9]: LD x4, x2, 0 (x4 = Mem[x2] = Mem[x40])");
+        $display("PHASE 2: Jump Table Setup");
+        $display("mem[10]: SVPC x21, 39 (LOOP_END address)");
+        $display("mem[11]: SVPC x22, 5 (LOAD_VALS address)");
+        $display("mem[12]: SVPC x20, 1 (LOOP_START address)");
         $display("========================================\n");
-        #100;
+        #20;
 
-        // ===== PHASE 3: Initialization (mem[16-21]) =====
+        // ===== PHASE 3: Loop Start (mem[13-15]) =====
         $display("========================================");
-        $display("PHASE 3: Loop Initialization");
-        $display("mem[16]: INC x10, x0, 1 (x10 = 1, loop counter)");
-        $display("mem[17]: ADD x23, x10, x2 (x23 = 1 + x40)");
-        $display("mem[18]: ADD x24, x11, x3 (x24 = x11 + x41)");
-        $display("mem[19]: LD x25, x11, -1");
-        $display("mem[20]: LD x26, x11, 0");
-        $display("mem[21]: LD x27, x11, 1");
+        $display("PHASE 3: Loop Control Logic");
+        $display("mem[13]: SUB x13, x4, x5 (check if i < N-1)");
+        $display("mem[14]: BRN x22 (if negative, continue to LOAD_VALS)");
+        $display("mem[15]: J x21 (else jump to LOOP_END)");
         $display("========================================\n");
-        #200;
+        #20;
 
-        // ===== PHASE 4: Loop Processing (mem[22-30]) =====
+        // ===== PHASE 4: Load Three Elements (mem[16-23]) =====
         $display("========================================");
-        $display("PHASE 4: First Loop Iteration");
-        $display("mem[22]: SUB x13, x26, x26 (x13 = 0, sets Z flag)");
-        $display("mem[23]: BRN (Branch if Negative)");
-        $display("mem[24]: SUB x13, x27, x26");
-        $display("mem[25]: BRN");
-        $display("mem[26]: SUB x13, x26, x26");
-        $display("mem[27]: BRN");
-        $display("mem[28]: ST x26, x12, 0 (Store to memory)");
-        $display("mem[29]: INC x10, x10, 1 (Increment loop counter)");
-        $display("mem[30]: SUB x13, x10, x4 (Compare counter with limit)");
+        $display("PHASE 4: Load 3-Element Window");
+        $display("mem[16-18]: Calculate pointer and load a[i-1]");
+        $display("mem[19-20]: Calculate pointer and load a[i]");
+        $display("mem[21-23]: Calculate pointer and load a[i+1]");
         $display("========================================\n");
-        #300;
-
-        // ===== PHASE 5: Jump Back (mem[31-32]) =====
-        $display("========================================");
-        $display("PHASE 5: Loop Control");
-        $display("mem[31]: BRZ (Branch if Zero - loop condition)");
-        $display("mem[32]: J x5 (Unconditional Jump)");
-        $display("========================================\n");
-        #150;
+        #40;
 
         // ===== Extended Run =====
         $display("========================================");
         $display("Running Extended Execution...");
         $display("Observing pipeline steady state and forwarding");
         $display("========================================\n");
-        #100000;  // Run for much longer to allow algorithm to complete
+        #5000000;  // Run for much longer to allow algorithm to complete
 
         $display("\n========================================");
         $display("FINAL DATA ARRAYS:");
@@ -168,6 +169,16 @@ module tb_cpu;
         $display("dmem[208] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[208]);
         $display("dmem[209] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[209]);
         $display("========================================\n");
+        
+        #20; 
+
+        $display("\n========================================");
+        $display("FINAL MEMORY DUMP (Output Array b[])");
+        $display("========================================");
+        
+        for (i = 200; i < 210; i = i + 1) begin 
+            $display("dmem[%0d] = %d", i, CPU_UUT.MEM_STAGE.DATA_MEM.mem[i]);
+        end
 
         $display("\n========================================");
         $display("  CPU Execution Complete");
@@ -177,28 +188,12 @@ module tb_cpu;
         $finish;
     end
 
-    // Cycle-by-cycle trace (disabled for extended run - uncomment to enable)
-    // initial begin
-    //     cycle = 0;
-    //     @(negedge rst);  // Wait for reset to be released
-    //     
-    //     #10;  // Let pipeline stabilize
-    //     
-    //     $display("Cycle-by-Cycle Trace:");
-    //     $display("Cyc | PC  | IF/ID Instr      | Opcode | Flush");
-    //     $display("----|-----|-----------------|--------|------");
-    //     
-    //     repeat(60) begin
-    //         $display("%3d | %3d | %h | %4b   | %b", 
-    //                  cycle, 
-    //                  CPU_UUT.if_pc, 
-    //                  CPU_UUT.if_id_instr,
-    //                  CPU_UUT.if_id_instr[3:0],
-    //                  CPU_UUT.if_flush);
-    //         @(posedge clk);
-    //         cycle = cycle + 1;
-    //     end
-    // end
+    
 
+
+    initial begin
+        $dumpfile("tb_cpu.vcd");
+        $dumpvars(0, tb_cpu);
+    end
 endmodule
 

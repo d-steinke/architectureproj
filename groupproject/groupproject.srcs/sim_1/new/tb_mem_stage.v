@@ -117,4 +117,9 @@ module tb_mem_stage;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_mem_stage.vcd");
+        $dumpvars(0, tb_mem_stage);
+    end
 endmodule

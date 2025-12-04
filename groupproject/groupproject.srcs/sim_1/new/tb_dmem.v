@@ -95,4 +95,9 @@ module tb_dmem;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_dmem.vcd");
+        $dumpvars(0, tb_dmem);
+    end
 endmodule

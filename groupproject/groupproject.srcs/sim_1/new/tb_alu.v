@@ -113,4 +113,9 @@ module tb_alu;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_alu.vcd");
+        $dumpvars(0, tb_alu);
+    end
 endmodule

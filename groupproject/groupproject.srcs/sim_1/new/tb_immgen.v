@@ -72,4 +72,9 @@ module tb_immgen;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_immgen.vcd");
+        $dumpvars(0, tb_immgen);
+    end
 endmodule

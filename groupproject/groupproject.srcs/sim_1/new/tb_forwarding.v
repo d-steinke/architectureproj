@@ -108,4 +108,9 @@ module tb_forwarding;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_forwarding.vcd");
+        $dumpvars(0, tb_forwarding);
+    end
 endmodule

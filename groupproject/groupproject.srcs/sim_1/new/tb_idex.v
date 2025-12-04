@@ -146,4 +146,9 @@ module tb_idex;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_idex.vcd");
+        $dumpvars(0, tb_idex);
+    end
 endmodule

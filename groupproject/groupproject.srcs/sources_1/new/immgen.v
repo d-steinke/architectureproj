@@ -26,6 +26,7 @@ module immgen(
     output reg [31:0] imm_out
 );
 
+    // Immediate is in bits [31:22], sign-extend from bit 31
     always @(*) begin
         if (instruction[31]) begin
             imm_out = {{22{1'b1}}, instruction[31:22]};

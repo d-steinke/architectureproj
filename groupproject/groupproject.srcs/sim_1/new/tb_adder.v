@@ -58,4 +58,9 @@ module tb_adder;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_adder.vcd");
+        $dumpvars(0, tb_adder);
+    end
 endmodule

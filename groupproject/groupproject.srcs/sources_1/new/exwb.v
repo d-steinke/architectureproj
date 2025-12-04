@@ -20,11 +20,11 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
+
 module exwb (
     input wire clk,
     input wire rst,
-    
-    // From EX Stage
+    input wire flush,  // Flush signal from branch/jump
     input wire [31:0] ex_alu_result,
     input wire [31:0] ex_mem_data,
     input wire [5:0] ex_rd,
@@ -32,12 +32,13 @@ module exwb (
     input wire [3:0] ex_opcode,
     input wire ex_zero_flag,
     input wire ex_neg_flag,
-    
-    // Control Signals from EX Stage
     input wire ex_reg_write,
     input wire ex_mem_to_reg,
+    input wire ex_preserve_flags,
     
-    // To WB Stage
+    // ADDED: Input for mem_write signal
+    input wire ex_mem_write, 
+
     output reg [31:0] wb_alu_result,
     output reg [31:0] wb_mem_data,
     output reg [5:0] wb_rd,
@@ -45,39 +46,40 @@ module exwb (
     output reg [3:0] wb_opcode,
     output reg wb_zero_flag,
     output reg wb_neg_flag,
-    
-    // Control Signals to WB Stage
     output reg wb_reg_write,
-    output reg wb_mem_to_reg
+    output reg wb_mem_to_reg,
+    
+    // ADDED: Output for mem_write signal
+    output reg wb_mem_write
 );
 
     always @(posedge clk) begin
-        if (rst) begin
-            wb_alu_result <= 32'd0;
-            wb_mem_data <= 32'd0;
-            wb_rd <= 6'd0;
-            wb_rt <= 6'd0;
-            wb_opcode <= 4'd0;
-            wb_zero_flag <= 1'b0;
-            wb_neg_flag <= 1'b0;
-            
-            wb_reg_write <= 1'b0;
-            wb_mem_to_reg <= 1'b0;
+        if (rst || flush) begin
+            // Reset or flush: prevent writes
+            wb_alu_result <= 0;
+            wb_mem_data <= 0;
+            wb_rd <= 0;
+            wb_rt <= 0;
+            wb_opcode <= 4'b0000;  // NOP opcode
+            // Don't update flags on flush
+            wb_reg_write <= 0;  // Critical: prevent register writes
+            wb_mem_to_reg <= 0;
+            wb_mem_write <= 0;  // Critical: prevent memory writes
         end else begin
             wb_alu_result <= ex_alu_result;
             wb_mem_data <= ex_mem_data;
             wb_rd <= ex_rd;
             wb_rt <= ex_rt;
             wb_opcode <= ex_opcode;
-            wb_zero_flag <= ex_zero_flag;
-            wb_neg_flag <= ex_neg_flag;
-            
+            // Update flags only if preserve_flags is NOT set (i.e., not a NOP)
+            if (!ex_preserve_flags) begin
+                wb_zero_flag <= ex_zero_flag;
+                wb_neg_flag <= ex_neg_flag;
+            end
             wb_reg_write <= ex_reg_write;
             wb_mem_to_reg <= ex_mem_to_reg;
-            // Debug: show values latched into EX/WB
-            $display("EXWB @%0t latched alu=%h mem=%h rd=%0d rt=%0d opcode=%h regw=%b memtoreg=%b", $time, ex_alu_result, ex_mem_data, ex_rd, ex_rt, ex_opcode, ex_reg_write, ex_mem_to_reg);
+            wb_mem_write <= ex_mem_write;
         end
     end
 
 endmodule
-

@@ -20,17 +20,17 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-
-
 module controlunit(
     input wire [3:0] opcode,
     output reg reg_write,
     output reg mem_to_reg,
     output reg mem_write,
-    output reg alu_src,      // 0 = Read Data 2, 1 = Immediate
-    output reg [2:0] alu_op, 
+    output reg alu_src_a,    // 0=Reg, 1=PC
+    output reg alu_src_b,    // 0=Reg, 1=Imm
+    output reg [2:0] alu_op, // {ADD, NEG, SUB}
     output reg branch,      
-    output reg jump          
+    output reg jump,
+    output reg preserve_flags
 );
 
     parameter OP_NOP  = 4'b0000;
@@ -46,54 +46,67 @@ module controlunit(
     parameter OP_BRN  = 4'b1010;
 
     always @(*) begin
+        // Default values
         reg_write = 0; mem_to_reg = 0; mem_write = 0; 
-        alu_src = 0; branch = 0; jump = 0; 
+        alu_src_a = 0; alu_src_b = 0; preserve_flags = 0; 
+        branch = 0; jump = 0; 
         alu_op = 3'b000; 
 
-        $display("CONTROL_UNIT @%0t Opcode=%b", $time, opcode); // Debug statement
-
         case (opcode)
-            OP_NOP: begin 
+            OP_NOP: begin
+                preserve_flags = 1;  // Don't update flags for NOP
             end
             
-            OP_ADD: begin
+            OP_SVPC: begin
                 reg_write = 1;
-                alu_op = 3'b000; 
-            end
-            
-            OP_SUB: begin
-                reg_write = 1;
-                alu_op = 3'b101; 
-            end
-
-            OP_NEG: begin
-                reg_write = 1;
-                alu_op = 3'b110;
-            end
-            
-            OP_INC: begin
-                reg_write = 1;
-                alu_src = 1; 
-                alu_op = 3'b000;
+                alu_src_a = 1; // Select PC
+                alu_src_b = 1; // Select Imm
+                alu_op = 3'b000; // ADD (Result = PC + Imm)
+                preserve_flags = 1;  // Don't update flags for SVPC
             end
             
             OP_LD: begin
                 reg_write = 1;
-                mem_to_reg = 1;
-                alu_src = 1; 
+                mem_to_reg = 1; // Corrected: Select Memory Data
+                alu_src_a = 0;
+                alu_src_b = 1; 
                 alu_op = 3'b000; 
             end
             
             OP_ST: begin
                 mem_write = 1;
-                alu_src = 1; 
+                mem_to_reg = 1; // Don't care, but 1 in table
+                alu_src_a = 0;
+                alu_src_b = 1; 
                 alu_op = 3'b000; 
             end
-
-            OP_SVPC: begin
+            
+            OP_ADD: begin
                 reg_write = 1;
-                alu_src = 1;
+                alu_src_a = 0;
+                alu_src_b = 0;
+                alu_op = 3'b000; 
+            end
+            
+            OP_INC: begin
+                reg_write = 1;
+                alu_src_a = 0;
+                alu_src_b = 1; 
                 alu_op = 3'b000;
+            end
+            
+            OP_NEG: begin
+                reg_write = 1;
+                alu_src_a = 0;
+                alu_src_b = 0; 
+                alu_op = 3'b110;
+            end
+            
+            OP_SUB: begin
+                reg_write = 1;
+                alu_src_a = 0;
+                alu_src_b = 0;
+                alu_op = 3'b101; 
             end
 
             OP_J: begin
@@ -101,10 +114,9 @@ module controlunit(
             end
             
             OP_BRZ, OP_BRN: begin
-                branch = 1;  // Conditional branch - actual branch taken depends on flags from previous instruction
+                branch = 1;  
             end
             
         endcase
     end
-
 endmodule

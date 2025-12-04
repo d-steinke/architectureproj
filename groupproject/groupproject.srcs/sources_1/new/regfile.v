@@ -49,16 +49,13 @@ module regfile(
             for (i = 0; i < 64; i = i + 1) begin
                 registers[i] <= 32'd0;
             end
-            $display("%M: regfile reset at %0t", $time);
         end else begin
             if (reg_write_en) begin
                 registers[write_reg] <= write_data;
-                $display("%M: write reg %0d <= %h at %0t (we=%b read1=%0d read2=%0d)", write_reg, write_data, $time, reg_write_en, read_reg1, read_reg2);
             end
         end
     end
 
-    // Expose a couple of registers for outside debug (reg 1 and reg 2)
     assign debug_r1 = registers[1];
     assign debug_r2 = registers[2];
 

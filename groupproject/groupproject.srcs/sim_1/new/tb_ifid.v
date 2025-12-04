@@ -99,5 +99,10 @@ module tb_ifid;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_ifid.vcd");
+        $dumpvars(0, tb_ifid);
+    end
 endmodule
 

@@ -1,9 +1,0 @@
-IM_SIMPLE: mem[0]=0000028f mem[1]=01410005 mem[2]=00c20005 mem[3]=00030424 mem[4]=00000000
-EX_STAGE @0 PC=xxxxxxxx MEM_WRITE=z
-Time: 10000 | Reset Released
-Time: 20000 | PC:          1 | Raw Instr: bbbbbbbb | IF/ID Output: aaaaaaaa
-Time: 30000 | PC:          2 | Raw Instr: cccccccc | IF/ID Output: bbbbbbbb
-Time: 30000 | *** Branch Asserted -> 10 ***
-Time: 40000 | PC:         10 | Raw Instr: deadbeef | IF/ID Output: cccccccc
-Time: 45000 (NegEdge) | IF/ID Output Updated to: deadbeef
-groupproject/groupproject.srcs/sim_1/new/tb_if.v:114: $finish called at 65000 (1ps)

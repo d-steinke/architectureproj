@@ -27,12 +27,12 @@ module alu(
     input wire [2:0] alu_control,
     output reg [31:0] result, 
     output wire zero,          
-    output wire negative      
+    output wire negative
 );
 
     wire cmd_add = alu_control[2];
     wire cmd_neg = alu_control[1];
-    wire cmd_sub = alu_control[0]; 
+    wire cmd_sub = alu_control[0];
 
     always @(*) begin
         case (alu_control)

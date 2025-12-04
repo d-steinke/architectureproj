@@ -21,6 +21,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
+
 module wb_stage (
     input wire [31:0] wb_alu_result,
     input wire [31:0] wb_mem_data,
@@ -34,19 +35,11 @@ module wb_stage (
     output wire [31:0] wb_write_data,
     output wire wb_write_en
 );
-
-    // Parameter for SVPC opcode
-    parameter OP_SVPC = 4'b1111;
-
-    // Select write register based on opcode
-    // SVPC writes to rt, all other instructions write to rd
-    assign wb_write_reg = (wb_opcode == OP_SVPC) ? wb_rt : wb_rd;
+    // Always use 'rd' (bits 21:16) as the destination.
+    // 'rt' (bits 9:4) is never a destination in SCU ISA.
+    assign wb_write_reg = wb_rd; 
     
-    // Select write data: memory data (LD) or ALU result (everything else)
     assign wb_write_data = (wb_mem_to_reg) ? wb_mem_data : wb_alu_result;
-    
-    // Pass through write enable
     assign wb_write_en = wb_reg_write;
-
+    
 endmodule
-

@@ -92,4 +92,9 @@ module tb_wb_stage;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_wb_stage.vcd");
+        $dumpvars(0, tb_wb_stage);
+    end
 endmodule

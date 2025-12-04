@@ -141,4 +141,9 @@ module tb_regfile;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_regfile.vcd");
+        $dumpvars(0, tb_regfile);
+    end
 endmodule

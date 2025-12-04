@@ -40,13 +40,13 @@ module tb_id;
     wire reg_write;
     wire mem_to_reg;
     wire mem_write;
-    wire alu_src;
+    
+    wire alu_src_a; 
+    wire alu_src_b;
     wire [2:0] alu_op;
     wire branch;
     wire jump;
 
-
-   
     regfile ID_REG_FILE (
         .clk(clk),
         .rst(rst),
@@ -56,7 +56,9 @@ module tb_id;
         .write_reg(wb_write_reg),       // Input from WB stage
         .write_data(wb_write_data),     // Input from WB stage
         .read_data1(read_data1),
-        .read_data2(read_data2)
+        .read_data2(read_data2),
+        .debug_r1(),                    // Added to match module definition
+        .debug_r2()                     // Added to match module definition
     );
 
     immgen ID_IMM_GEN (
@@ -69,7 +71,8 @@ module tb_id;
         .reg_write(reg_write),
         .mem_to_reg(mem_to_reg),
         .mem_write(mem_write),
-        .alu_src(alu_src),
+        .alu_src_a(alu_src_a), // New Signal
+        .alu_src_b(alu_src_b), // Renamed Signal
         .alu_op(alu_op),
         .branch(branch),
         .jump(jump)
@@ -119,9 +122,11 @@ module tb_id;
         $display("RS[15:10]=%d (Expected 1), RT[9:4]=%d (Expected 2)", instruction[15:10], instruction[9:4]);
         $display("RS Read Data: %d (Expected 100)", read_data1);
         $display("RT Read Data: %d (Expected 200)", read_data2);
-        $display("Control: RegWrite=%b (Exp 1), ALUSrc=%b (Exp 0), ALUOp=%b (Exp 000) %s", 
-                 reg_write, alu_src, alu_op,
-                 (read_data1 == 100 && read_data2 == 200 && alu_op == 3'b000) ? "PASS" : "FAIL");
+        
+        // --- UPDATED CHECK for ADD: ALUSrcA=0 (Reg), ALUSrcB=0 (Reg) ---
+        $display("Control: RegWrite=%b (Exp 1), ALUSrcA=%b (Exp 0), ALUSrcB=%b (Exp 0), ALUOp=%b (Exp 000) %s", 
+                 reg_write, alu_src_a, alu_src_b, alu_op,
+                 (read_data1 == 100 && read_data2 == 200 && alu_op == 3'b000 && alu_src_a == 0 && alu_src_b == 0) ? "PASS" : "FAIL");
 
         // Assembly: LD x4, x1, -5 (x4 = Mem[x1 - 5])
         // Format: y[10] | rd[6] | rs[6] | rt[6] | opcode[4]
@@ -135,12 +140,19 @@ module tb_id;
         $display("Immediate: %d (Expected -5)", $signed(imm_out));
         $display("RS[15:10]=%d (Expected 1)", instruction[15:10]);
         $display("RS Read Data: %d (Expected 100)", read_data1);
-        $display("Control: RegWrite=%b (Exp 1), ALUSrc=%b (Exp 1), MemToReg=%b (Exp 1) %s", 
-                 reg_write, alu_src, mem_to_reg,
-                 (read_data1 == 100 && $signed(imm_out) == -5 && mem_to_reg == 1) ? "PASS" : "FAIL");
+        
+        // --- UPDATED CHECK for LD: ALUSrcA=0 (Reg), ALUSrcB=1 (Imm) ---
+        $display("Control: RegWrite=%b (Exp 1), ALUSrcA=%b (Exp 0), ALUSrcB=%b (Exp 1), MemToReg=%b (Exp 1) %s", 
+                 reg_write, alu_src_a, alu_src_b, mem_to_reg,
+                 (read_data1 == 100 && $signed(imm_out) == -5 && mem_to_reg == 1 && alu_src_a == 0 && alu_src_b == 1) ? "PASS" : "FAIL");
 
         #20;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_id.vcd");
+        $dumpvars(0, tb_id);
+    end
 endmodule

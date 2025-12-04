@@ -96,4 +96,9 @@ module tb_ex_stage;
         $finish;
     end
 
+
+    initial begin
+        $dumpfile("tb_ex_stage.vcd");
+        $dumpvars(0, tb_ex_stage);
+    end
 endmodule

@@ -23,11 +23,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
+
 module branchctl (
-    input wire [3:0] opcode,      // Current instruction opcode
-    input wire zero_flag,          // Zero flag from previous instruction (in EX/WB stage)
-    input wire neg_flag,           // Negative flag from previous instruction (in EX/WB stage)
-    output reg branch_taken        // 1 = take branch, 0 = don't take branch
+    input wire [3:0] opcode,      
+    input wire zero_flag,          
+    input wire neg_flag,           
+    output reg branch_taken        
 );
 
     parameter OP_BRZ = 4'b1001;
@@ -36,12 +37,12 @@ module branchctl (
     always @(*) begin
         case (opcode)
             OP_BRZ: begin
-                // BRZ: branch if result WAS zero (z=0 in truth table means Z flag was 0)
-                branch_taken = ~zero_flag;
+                // Branch if result WAS zero (Z=1)
+                branch_taken = zero_flag;
             end
             
             OP_BRN: begin
-                // BRN: branch if result WAS negative (n=1 in truth table means N flag was 1)
+                // Branch if result WAS negative (N=1)
                 branch_taken = neg_flag;
             end
             
@@ -52,4 +53,3 @@ module branchctl (
     end
 
 endmodule
-
