@@ -36,7 +36,6 @@ module exwb (
     input wire ex_mem_to_reg,
     input wire ex_preserve_flags,
     
-    // ADDED: Input for mem_write signal
     input wire ex_mem_write, 
 
     output reg [31:0] wb_alu_result,
@@ -49,7 +48,6 @@ module exwb (
     output reg wb_reg_write,
     output reg wb_mem_to_reg,
     
-    // ADDED: Output for mem_write signal
     output reg wb_mem_write
 );
 
