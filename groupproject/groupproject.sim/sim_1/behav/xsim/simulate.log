@@ -1,0 +1,26 @@
+Time resolution is 1 ps
+
+FINAL DATA ARRAYS:
+INPUT ARRAY (dmem[2-8]):
+dmem[2] = 3
+dmem[3] = 1
+dmem[4] = 5
+dmem[5] = 7
+dmem[6] = 2
+dmem[7] = 9
+dmem[8] = 8
+
+OUTPUT ARRAY (dmem[71-77]):
+dmem[71] = 3 (Expected 3)
+dmem[72] = 3 (Expected 3)
+dmem[73] = 5 (Expected 5)
+dmem[74] = 5 (Expected 5)
+dmem[75] = 7 (Expected 7)
+dmem[76] = 8 (Expected 8)
+dmem[77] = 8 (Expected 8)
+
+NEGATE TEST:
+x30 = -2 (Expected -2)
+
+MEDIAN FILTER TEST PASSED
+$finish called at time : 2885 ns : File "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sim_1/new/tb_cpu.v" Line 98

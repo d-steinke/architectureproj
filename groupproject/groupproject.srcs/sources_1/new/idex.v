@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: ID/EX Pipeline Register - buffers decode stage outputs to execute stage
+// Description:
 // 
 // Dependencies: 
 // 
@@ -24,9 +24,8 @@
 module idex (
     input wire clk,
     input wire rst,
-    input wire flush,  // Flush signal from branch/jump
+    input wire flush, 
     
-    // From ID Stage
     input wire [31:0] id_pc,
     input wire [31:0] id_reg_data1,
     input wire [31:0] id_reg_data2,
@@ -36,7 +35,6 @@ module idex (
     input wire [5:0] id_rt,
     input wire [3:0] id_opcode,
     
-    // Control Signals
     input wire id_reg_write,
     input wire id_mem_to_reg,
     input wire id_mem_write,
@@ -47,7 +45,6 @@ module idex (
     input wire id_jump,
     input wire id_preserve_flags,
     
-    // To EX Stage
     output reg [31:0] ex_pc,
     output reg [31:0] ex_reg_data1,
     output reg [31:0] ex_reg_data2,
@@ -57,7 +54,6 @@ module idex (
     output reg [5:0] ex_rt,
     output reg [3:0] ex_opcode,
     
-    // Control Signals
     output reg ex_reg_write,
     output reg ex_mem_to_reg,
     output reg ex_mem_write,
@@ -71,7 +67,6 @@ module idex (
 
     always @(negedge clk) begin
         if (rst || flush) begin
-            // Reset or flush: insert NOP (no writes, no branches)
             ex_pc <= 32'd0;
             ex_reg_data1 <= 32'd0;
             ex_reg_data2 <= 32'd0;
@@ -79,7 +74,7 @@ module idex (
             ex_rd <= 6'd0;
             ex_rs <= 6'd0;
             ex_rt <= 6'd0;
-            ex_opcode <= 4'b0000;  // NOP opcode
+            ex_opcode <= 4'b0000; 
             
             ex_reg_write <= 1'b0;
             ex_mem_to_reg <= 1'b0;
@@ -89,7 +84,7 @@ module idex (
             ex_alu_op <= 3'b000;
             ex_branch <= 1'b0;
             ex_jump <= 1'b0;
-            ex_preserve_flags <= 1'b1;  // Preserve flags for NOP
+            ex_preserve_flags <= 1'b1;  
         end else begin
             ex_pc <= id_pc;
             ex_reg_data1 <= id_reg_data1;

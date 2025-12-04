@@ -35,13 +35,9 @@ module regfile(
     reg [31:0] registers [0:63];
     integer i;
 
-    // Synchronous write, asynchronous read with write-forwarding
-    // If a write is occurring this cycle to the same register being read,
-    // forward `write_data` so the read sees the newly written value.
     assign read_data1 = (reg_write_en && (write_reg == read_reg1)) ? write_data : registers[read_reg1];
     assign read_data2 = (reg_write_en && (write_reg == read_reg2)) ? write_data : registers[read_reg2];
 
-    // Synchronous write on clock edge; async reset
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             for (i = 0; i < 64; i = i + 1) begin

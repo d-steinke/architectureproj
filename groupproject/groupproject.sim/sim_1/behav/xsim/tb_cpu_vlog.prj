@@ -1,5 +1,5 @@
 # compile verilog/system verilog design source files
-verilog xil_defaultlib  --include "../../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef" \
+verilog xil_defaultlib  --include "../../../../../../../../../../Apps/Xilinx/2025.1/Vivado/data/rsb/busdef" \
 "../../../../groupproject.srcs/sources_1/new/adder.v" \
 "../../../../groupproject.srcs/sources_1/new/alu.v" \
 "../../../../groupproject.srcs/sources_1/new/branchctl.v" \

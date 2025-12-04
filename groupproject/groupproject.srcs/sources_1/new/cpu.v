@@ -6,19 +6,15 @@
 // Create Date: 12/01/2025
 // Design Name: 
 // Module Name: cpu
-// Project Name: SCU ISA 3-Stage Pipelined CPU
+// Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: Top-level CPU module integrating all pipeline stages
+// Description: 
 // 
-// Dependencies: if_stage, ifid, id_stage, idex, ex_stage, mem_stage, exwb, 
-//               wb_stage, forwarding
+// Dependencies: 
 // 
 // Revision:
 // Revision 0.01 - File Created
-// Additional Comments: 
-// Pipeline: IF -> ID -> EX -> MEM -> WB
-// Includes branch/jump control, data forwarding, and flush on branch
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -94,10 +90,7 @@ module cpu (
     
     // ===== FORWARDING =====
     wire [31:0] alu_input1, alu_input2;
-    
-    // --------------------------------------------------------
-    // INSTANTIATIONS
-    // --------------------------------------------------------
+
 
     if_stage IF_STAGE (
         .clk(clk),
@@ -130,7 +123,6 @@ module cpu (
         .pc_out(if_id_pc)
     );
 
-    // Register WB signals to break combinational path
     reg reg_write_r;
     reg [5:0] write_reg_r;
     reg [31:0] write_data_r;
@@ -177,7 +169,7 @@ module cpu (
     idex ID_EX_REG (
         .clk(clk),
         .rst(rst),
-        .flush(if_flush),  // Flush on taken branch/jump
+        .flush(if_flush),  
         .id_pc(id_pc),
         .id_reg_data1(id_reg_data1),
         .id_reg_data2(id_reg_data2),
@@ -219,12 +211,12 @@ module cpu (
         .id_ex_rt(id_ex_rt),
         .ex_wb_rd(ex_wb_rd),
         .ex_wb_reg_write(ex_wb_reg_write),
-        .mem_rd(write_reg_r),              // Connect to WB stage register
-        .mem_reg_write(reg_write_r),       // Connect to WB stage register
+        .mem_rd(write_reg_r),             
+        .mem_reg_write(reg_write_r),     
         .id_ex_reg_data1(id_ex_reg_data1),
         .id_ex_reg_data2(id_ex_reg_data2),
         .ex_wb_alu_result(ex_wb_alu_result),
-        .mem_alu_result(write_data_r),     // Connect to WB stage register
+        .mem_alu_result(write_data_r),   
         .alu_input1(alu_input1),
         .alu_input2(alu_input2)
     );
@@ -252,7 +244,7 @@ module cpu (
     exwb EX_WB_REG (
         .clk(clk),
         .rst(rst),
-        .flush(if_flush),  // Flush on taken branch/jump
+        .flush(if_flush), 
         .ex_alu_result(ex_alu_result),
         .ex_mem_data(ex_write_data),
         .ex_rd(id_ex_rd),

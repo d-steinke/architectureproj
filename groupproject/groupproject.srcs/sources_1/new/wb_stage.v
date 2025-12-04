@@ -9,14 +9,13 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: WB Stage - Writeback: selects write data and controls register write
+// Description: 
 // 
 // Dependencies: 
 // 
 // Revision:
 // Revision 0.01 - File Created
 // Additional Comments:
-// Selects between ALU result and memory data based on mem_to_reg signal
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -35,8 +34,6 @@ module wb_stage (
     output wire [31:0] wb_write_data,
     output wire wb_write_en
 );
-    // Always use 'rd' (bits 21:16) as the destination.
-    // 'rt' (bits 9:4) is never a destination in SCU ISA.
     assign wb_write_reg = wb_rd; 
     
     assign wb_write_data = (wb_mem_to_reg) ? wb_mem_data : wb_alu_result;

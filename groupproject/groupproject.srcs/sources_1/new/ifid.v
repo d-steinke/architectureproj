@@ -22,7 +22,7 @@
 
 module ifid(
     input wire clk,
-    input wire flush,                   // Flush signal: 1 = squash instruction
+    input wire flush,                  
     input wire [31:0] instr_in,
     input wire [31:0] pc_in,
     
@@ -31,7 +31,6 @@ module ifid(
     );
     always@(negedge clk) begin
         if (flush) begin
-            // Squash instruction: output NOP (opcode 0000)
             instr_out <= 32'h00000000;
             pc_out <= pc_in;
         end else begin

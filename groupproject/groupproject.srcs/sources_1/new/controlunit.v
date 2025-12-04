@@ -25,9 +25,9 @@ module controlunit(
     output reg reg_write,
     output reg mem_to_reg,
     output reg mem_write,
-    output reg alu_src_a,    // 0=Reg, 1=PC
-    output reg alu_src_b,    // 0=Reg, 1=Imm
-    output reg [2:0] alu_op, // {ADD, NEG, SUB}
+    output reg alu_src_a,    
+    output reg alu_src_b,   
+    output reg [2:0] alu_op, 
     output reg branch,      
     output reg jump,
     output reg preserve_flags
@@ -46,7 +46,6 @@ module controlunit(
     parameter OP_BRN  = 4'b1010;
 
     always @(*) begin
-        // Default values
         reg_write = 0; mem_to_reg = 0; mem_write = 0; 
         alu_src_a = 0; alu_src_b = 0; preserve_flags = 0; 
         branch = 0; jump = 0; 
@@ -54,7 +53,7 @@ module controlunit(
 
         case (opcode)
             OP_NOP: begin
-                preserve_flags = 1;  // Don't update flags for NOP
+                preserve_flags = 1;  
             end
             
             OP_SVPC: begin
@@ -62,7 +61,7 @@ module controlunit(
                 alu_src_a = 1; // Select PC
                 alu_src_b = 1; // Select Imm
                 alu_op = 3'b000; // ADD (Result = PC + Imm)
-                preserve_flags = 1;  // Don't update flags for SVPC
+                preserve_flags = 1; 
             end
             
             OP_LD: begin
@@ -75,7 +74,7 @@ module controlunit(
             
             OP_ST: begin
                 mem_write = 1;
-                mem_to_reg = 1; // Don't care, but 1 in table
+                mem_to_reg = 1;
                 alu_src_a = 0;
                 alu_src_b = 1; 
                 alu_op = 3'b000; 

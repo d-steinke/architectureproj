@@ -9,10 +9,9 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: IF Stage - Instruction Fetch with branch/jump control
-//              Selects next PC based on: normal increment, unconditional jump, or conditional branch
+// Description: 
 // 
-// Dependencies: pc, mux, adder, branchctl
+// Dependencies: 
 // 
 // Revision:
 // Revision 0.01 - File Created
@@ -25,33 +24,30 @@ module if_stage (
     input wire clk,
     input wire rst,
     
-    // Branch/Jump information from pipeline
-    input wire [31:0] branch_target,    // Target address (from EX stage)
-    input wire [31:0] id_pc,            // Current PC (from IF/ID pipeline)
-    input wire [3:0] id_opcode,         // Current instruction opcode (from IF/ID pipeline)
-    input wire [3:0] id_ex_opcode,      // Opcode from ID/EX pipeline (for branch evaluation)
-    input wire jump,                    // Jump signal from control unit (J instruction)
-    input wire branch,                  // Branch signal (BRZ/BRN instruction)
-    input wire prev_zero_flag,          // Zero flag from previous instruction (from EX/WB pipeline)
-    input wire prev_neg_flag,           // Negative flag from previous instruction (from EX/WB pipeline)
+    input wire [31:0] branch_target,    
+    input wire [31:0] id_pc,          
+    input wire [3:0] id_opcode,    
+    input wire [3:0] id_ex_opcode,      
+    input wire jump,                  
+    input wire branch,                 
+    input wire prev_zero_flag,       
+    input wire prev_neg_flag,           
     
-    output wire [31:0] pc_out,          // Current program counter
-    output wire [31:0] next_pc,         // Next program counter (PC+1)
-    output wire flush                   // Flush signal: 1 = squash instruction in IF/ID stage
+    output wire [31:0] pc_out,          
+    output wire [31:0] next_pc,       
+    output wire flush                  
 );
 
     wire [31:0] pc_plus_one;
     wire branch_taken;
     wire pc_mux_sel;
 
-    // Always compute PC + 1
     adder PC_ADDER (
         .a(pc_out),
         .b(32'd1),
         .out(pc_plus_one)
     );
 
-    // Determine if conditional branch should be taken
     branchctl BRANCH_LOGIC (
         .opcode(id_ex_opcode),
         .zero_flag(prev_zero_flag),
@@ -72,10 +68,8 @@ module if_stage (
         .out(next_pc)
     );
 
-    // Flush signal: squash instruction in IF/ID stage when branch/jump is taken
     assign flush = pc_mux_sel;
 
-    // PC register
     pc PC_REG (
         .clk(clk),
         .rst(rst),

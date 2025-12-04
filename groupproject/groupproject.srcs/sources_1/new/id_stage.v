@@ -9,9 +9,9 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: ID Stage - Instruction Decode and Register Read
+// Description: 
 // 
-// Dependencies: controlunit, regfile, immgen
+// Dependencies: 
 // 
 // Revision:
 // Revision 0.01 - File Created
@@ -57,7 +57,6 @@ module id_stage (
     wire [5:0] rd = if_id_instr[21:16];
     wire [9:0] imm  = if_id_instr[31:22];
     
-    // All instructions use rs for read_reg1
     wire [5:0] read_reg1_sel = rs;
 
     assign id_pc = if_id_pc;

@@ -1,0 +1,42 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/adder.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module adder
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/alu.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/branchctl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module branchctl
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/controlunit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module controlunit
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/cpu.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module cpu
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/dmem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dmem
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/ex_stage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ex_stage
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/exwb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module exwb
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/forwarding.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module forwarding
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/id_stage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module id_stage
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/idex.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module idex
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/if_stage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module if_stage
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/ifid.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ifid
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/im.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module im
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/immgen.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module immgen
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/mem_stage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mem_stage
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/mux.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mux
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/pc.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pc
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/regfile.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module regfile
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sources_1/new/wb_stage.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module wb_stage
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/dsteinke/Documents/architectureproj-main/architectureproj-main/groupproject/groupproject.srcs/sim_1/new/tb_cpu.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_cpu

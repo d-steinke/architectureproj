@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: EX/WB Pipeline Register - buffers execute stage outputs to writeback stage
+// Description: 
 // 
 // Dependencies: 
 // 
@@ -24,7 +24,7 @@
 module exwb (
     input wire clk,
     input wire rst,
-    input wire flush,  // Flush signal from branch/jump
+    input wire flush,  
     input wire [31:0] ex_alu_result,
     input wire [31:0] ex_mem_data,
     input wire [5:0] ex_rd,
@@ -53,23 +53,20 @@ module exwb (
 
     always @(negedge clk) begin
         if (rst || flush) begin
-            // Reset or flush: prevent writes
             wb_alu_result <= 0;
             wb_mem_data <= 0;
             wb_rd <= 0;
             wb_rt <= 0;
-            wb_opcode <= 4'b0000;  // NOP opcode
-            // Don't update flags on flush
-            wb_reg_write <= 0;  // Critical: prevent register writes
+            wb_opcode <= 4'b0000; 
+            wb_reg_write <= 0;  
             wb_mem_to_reg <= 0;
-            wb_mem_write <= 0;  // Critical: prevent memory writes
+            wb_mem_write <= 0; 
         end else begin
             wb_alu_result <= ex_alu_result;
             wb_mem_data <= ex_mem_data;
             wb_rd <= ex_rd;
             wb_rt <= ex_rt;
             wb_opcode <= ex_opcode;
-            // Update flags only if preserve_flags is NOT set (i.e., not a NOP)
             if (!ex_preserve_flags) begin
                 wb_zero_flag <= ex_zero_flag;
                 wb_neg_flag <= ex_neg_flag;

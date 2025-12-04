@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
-// Description: Data Memory - Read/write memory for LD/ST instructions
+// Description: 
 // 
 // Dependencies: 
 // 
@@ -22,17 +22,16 @@
 
 module dmem (
     input wire clk,
-    input wire [31:0] address,      // Memory address
-    input wire [31:0] write_data,   // Data to write
-    input wire mem_write,           // Write enable
-    output reg [31:0] read_data     // Data read from memory
+    input wire [31:0] address,     
+    input wire [31:0] write_data,  
+    input wire mem_write,          
+    output reg [31:0] read_data   
 );
 
     parameter MEM_SIZE = 256;
     reg [31:0] mem [0:MEM_SIZE-1];
     integer i;
 
-    // Combinational read
     always @(*) begin
         if (address >= 0 && address < MEM_SIZE) begin
             read_data = mem[address];
@@ -41,7 +40,6 @@ module dmem (
         end
     end
 
-    // Synchronous write
     always @(posedge clk) begin
         if (mem_write) begin
             if (address >= 0 && address < MEM_SIZE) begin
@@ -50,15 +48,11 @@ module dmem (
         end
     end
 
-    // Initialize memory with REQUIRED Test Case Data
     initial begin
-        // Clear all memory first
         for (i = 0; i < MEM_SIZE; i = i + 1) begin
             mem[i] = 32'h00000000;
         end
         
-        // Input Array for 1D Median Filter at addresses 2-8
-        // Test data: [3, 1, 5, 7, 2, 9, 8]
         mem[2] = 32'd3;
         mem[3] = 32'd1;
         mem[4] = 32'd5;
