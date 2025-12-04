@@ -53,7 +53,7 @@ module exwb (
     output reg wb_mem_write
 );
 
-    always @(posedge clk) begin
+    always @(negedge clk) begin
         if (rst || flush) begin
             // Reset or flush: prevent writes
             wb_alu_result <= 0;

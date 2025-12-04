@@ -123,7 +123,7 @@ module cpu (
     
     ifid IF_ID_REG (
         .clk(clk),
-        .flush(if_flush),
+        .flush(1'b0), 
         .instr_in(if_instr),
         .pc_in(if_pc),
         .instr_out(if_id_instr),
@@ -239,6 +239,9 @@ module cpu (
         .alu_src_b(id_ex_alu_src_b),
         .alu_op(id_ex_alu_op),
         .id_ex_mem_write(id_ex_mem_write), 
+        .preserve_flags(id_ex_preserve_flags),
+        .prev_zero_flag(ex_wb_zero_flag),
+        .prev_neg_flag(ex_wb_neg_flag),
         .ex_alu_result(ex_alu_result),
         .ex_write_data(ex_write_data),
         .ex_branch_target(ex_branch_target),

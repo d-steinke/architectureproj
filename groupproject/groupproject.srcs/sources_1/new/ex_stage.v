@@ -34,6 +34,9 @@ module ex_stage(
     input wire alu_src_b,             // 0=Reg, 1=Imm
     input wire [2:0] alu_op,          
     input wire id_ex_mem_write,
+    input wire preserve_flags,
+    input wire prev_zero_flag,
+    input wire prev_neg_flag,
     
     output wire [31:0] ex_alu_result,  
     output wire [31:0] ex_write_data,  
@@ -44,6 +47,8 @@ module ex_stage(
 
     wire [31:0] alu_operand_a; 
     wire [31:0] alu_operand_b;
+    wire alu_zero;
+    wire alu_neg;
 
     // --- MUX A ---
     // Selects between Register Data 1 and PC (for SVPC)
@@ -68,9 +73,12 @@ module ex_stage(
         .b(alu_operand_b),     
         .alu_control(alu_op),  
         .result(ex_alu_result),
-        .zero(zero_flag),
-        .negative(neg_flag)
+        .zero(alu_zero),
+        .negative(alu_neg)
     );
+    
+    assign zero_flag = preserve_flags ? prev_zero_flag : alu_zero;
+    assign neg_flag = preserve_flags ? prev_neg_flag : alu_neg;
     
     // Branch Target is simply the register value (Absolute Jump)
     assign ex_branch_target = id_ex_reg_data1; 

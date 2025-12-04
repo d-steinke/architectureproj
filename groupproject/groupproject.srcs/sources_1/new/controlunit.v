@@ -67,7 +67,7 @@ module controlunit(
             
             OP_LD: begin
                 reg_write = 1;
-                mem_to_reg = 1; // Corrected: Select Memory Data
+                mem_to_reg = 1; 
                 alu_src_a = 0;
                 alu_src_b = 1; 
                 alu_op = 3'b000; 

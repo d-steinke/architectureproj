@@ -57,20 +57,17 @@ module dmem (
             mem[i] = 32'h00000000;
         end
         
-        // Input Array for 1D Median Filter at addresses 100-109
-        // Test data: 10 elements for median filter
-        mem[100] = 32'd5;
-        mem[101] = 32'd10;
-        mem[102] = 32'd3;
+        // Input Array for 1D Median Filter at addresses 100-106
+        // Test data: [3, 1, 5, 7, 2, 9, 8]
+        mem[100] = 32'd3;
+        mem[101] = 32'd1;
+        mem[102] = 32'd5;
         mem[103] = 32'd7;
         mem[104] = 32'd2;
-        mem[105] = 32'd8;
-        mem[106] = 32'd1;
-        mem[107] = 32'd9;
-        mem[108] = 32'd4;
-        mem[109] = 32'd6;
+        mem[105] = 32'd9;
+        mem[106] = 32'd8;
 
-        // Output Array will be written by CPU to addresses 200-209
+        // Output Array will be written by CPU to addresses 200-206
     end
 
 endmodule

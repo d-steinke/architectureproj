@@ -14,10 +14,12 @@ module tb_id_stage;
     
     wire [31:0] id_pc, id_reg_data1, id_reg_data2, id_imm;
     wire [5:0] id_rd, id_rs, id_rt;
+    wire [3:0] id_opcode;
     wire id_reg_write, id_mem_to_reg, id_mem_write;
-    wire id_alu_src;
+    wire id_alu_src_a, id_alu_src_b;
     wire [2:0] id_alu_op;
     wire id_branch, id_jump;
+    wire id_preserve_flags;
 
     id_stage UUT (
         .clk(clk),
@@ -34,13 +36,16 @@ module tb_id_stage;
         .id_rd(id_rd),
         .id_rs(id_rs),
         .id_rt(id_rt),
+        .id_opcode(id_opcode),
         .id_reg_write(id_reg_write),
         .id_mem_to_reg(id_mem_to_reg),
         .id_mem_write(id_mem_write),
-        .id_alu_src(id_alu_src),
+        .id_alu_src_a(id_alu_src_a),
+        .id_alu_src_b(id_alu_src_b),
         .id_alu_op(id_alu_op),
         .id_branch(id_branch),
-        .id_jump(id_jump)
+        .id_jump(id_jump),
+        .id_preserve_flags(id_preserve_flags)
     );
 
     initial begin
@@ -111,9 +116,9 @@ module tb_id_stage;
         $display("Test 4 - INC x10, x1, -5:");
         $display("  rd=%d, rs=%d (Expected 10, 1) %s",
                  id_rd, id_rs, (id_rd == 10 && id_rs == 1) ? "PASS" : "FAIL");
-        $display("  imm=%d (Expected -5), alu_src=%b (Expected 1) %s",
-                 $signed(id_imm), id_alu_src,
-                 ($signed(id_imm) == -5 && id_alu_src == 1) ? "PASS" : "FAIL");
+        $display("  imm=%d (Expected -5), alu_src_b=%b (Expected 1) %s",
+                 $signed(id_imm), id_alu_src_b,
+                 ($signed(id_imm) == -5 && id_alu_src_b == 1) ? "PASS" : "FAIL");
 
         // Test 5: LD x4, x1, 0 (opcode=1110, rd=4, rs=1, imm=0)
         if_id_instr = {10'b0, 6'd4, 6'd1, 6'd0, 4'b1110};

@@ -9,18 +9,21 @@
 module tb_controlunit;
 
     reg [3:0] opcode;
-    wire reg_write, mem_to_reg, mem_write, alu_src, branch, jump;
+    wire reg_write, mem_to_reg, mem_write, alu_src_a, alu_src_b, branch, jump;
     wire [2:0] alu_op;
+    wire preserve_flags;
 
     controlunit UUT (
         .opcode(opcode),
         .reg_write(reg_write),
         .mem_to_reg(mem_to_reg),
         .mem_write(mem_write),
-        .alu_src(alu_src),
+        .alu_src_a(alu_src_a),
+        .alu_src_b(alu_src_b),
         .alu_op(alu_op),
         .branch(branch),
-        .jump(jump)
+        .jump(jump),
+        .preserve_flags(preserve_flags)
     );
 
     initial begin
@@ -31,8 +34,8 @@ module tb_controlunit;
         opcode = 4'b0000;
         #5;
         $display("Test 1 - NOP (0000):");
-        $display("  reg_write=%b, mem_to_reg=%b, mem_write=%b, alu_src=%b, alu_op=%b, branch=%b, jump=%b",
-                 reg_write, mem_to_reg, mem_write, alu_src, alu_op, branch, jump);
+        $display("  reg_write=%b, mem_to_reg=%b, mem_write=%b, alu_src_a=%b, alu_src_b=%b, alu_op=%b, branch=%b, jump=%b",
+                 reg_write, mem_to_reg, mem_write, alu_src_a, alu_src_b, alu_op, branch, jump);
         $display("  Expected: reg_write=0, mem_write=0, branch=0, jump=0");
         if (reg_write==0 && mem_write==0 && branch==0 && jump==0) $display("  PASS\n");
         else $display("  FAIL\n");
@@ -41,50 +44,50 @@ module tb_controlunit;
         opcode = 4'b1111;
         #5;
         $display("Test 2 - SVPC (1111):");
-        $display("  reg_write=%b, mem_to_reg=%b, mem_write=%b, alu_src=%b, alu_op=%b",
-                 reg_write, mem_to_reg, mem_write, alu_src, alu_op);
-        $display("  Expected: reg_write=1, mem_to_reg=0, mem_write=0, alu_src=1 (immediate)");
-        if (reg_write==1 && mem_to_reg==0 && mem_write==0 && alu_src==1) $display("  PASS\n");
+        $display("  reg_write=%b, mem_to_reg=%b, mem_write=%b, alu_src_a=%b, alu_src_b=%b, alu_op=%b",
+                 reg_write, mem_to_reg, mem_write, alu_src_a, alu_src_b, alu_op);
+        $display("  Expected: reg_write=1, mem_to_reg=0, mem_write=0, alu_src_a=1, alu_src_b=1");
+        if (reg_write==1 && mem_to_reg==0 && mem_write==0 && alu_src_a==1 && alu_src_b==1) $display("  PASS\n");
         else $display("  FAIL\n");
         
         // Test 3: LD (1110)
         opcode = 4'b1110;
         #5;
         $display("Test 3 - LD (1110):");
-        $display("  reg_write=%b, mem_to_reg=%b, mem_write=%b, alu_src=%b",
-                 reg_write, mem_to_reg, mem_write, alu_src);
-        $display("  Expected: reg_write=1, mem_to_reg=1, mem_write=0, alu_src=1 (immediate for address)");
-        if (reg_write==1 && mem_to_reg==1 && mem_write==0 && alu_src==1) $display("  PASS\n");
+        $display("  reg_write=%b, mem_to_reg=%b, mem_write=%b, alu_src_b=%b",
+                 reg_write, mem_to_reg, mem_write, alu_src_b);
+        $display("  Expected: reg_write=1, mem_to_reg=1, mem_write=0, alu_src_b=1 (immediate for address)");
+        if (reg_write==1 && mem_to_reg==1 && mem_write==0 && alu_src_b==1) $display("  PASS\n");
         else $display("  FAIL\n");
         
         // Test 4: ST (0011)
         opcode = 4'b0011;
         #5;
         $display("Test 4 - ST (0011):");
-        $display("  reg_write=%b, mem_write=%b, alu_src=%b",
-                 reg_write, mem_write, alu_src);
-        $display("  Expected: reg_write=0, mem_write=1, alu_src=1 (immediate for address)");
-        if (reg_write==0 && mem_write==1 && alu_src==1) $display("  PASS\n");
+        $display("  reg_write=%b, mem_write=%b, alu_src_b=%b",
+                 reg_write, mem_write, alu_src_b);
+        $display("  Expected: reg_write=0, mem_write=1, alu_src_b=1 (immediate for address)");
+        if (reg_write==0 && mem_write==1 && alu_src_b==1) $display("  PASS\n");
         else $display("  FAIL\n");
         
         // Test 5: ADD (0100)
         opcode = 4'b0100;
         #5;
         $display("Test 5 - ADD (0100):");
-        $display("  reg_write=%b, mem_write=%b, alu_src=%b, alu_op=%b",
-                 reg_write, mem_write, alu_src, alu_op);
-        $display("  Expected: reg_write=1, mem_write=0, alu_src=0 (register), alu_op=000 (add)");
-        if (reg_write==1 && mem_write==0 && alu_src==0 && alu_op==3'b000) $display("  PASS\n");
+        $display("  reg_write=%b, mem_write=%b, alu_src_b=%b, alu_op=%b",
+                 reg_write, mem_write, alu_src_b, alu_op);
+        $display("  Expected: reg_write=1, mem_write=0, alu_src_b=0 (register), alu_op=000 (add)");
+        if (reg_write==1 && mem_write==0 && alu_src_b==0 && alu_op==3'b000) $display("  PASS\n");
         else $display("  FAIL\n");
         
         // Test 6: INC (0101)
         opcode = 4'b0101;
         #5;
         $display("Test 6 - INC (0101):");
-        $display("  reg_write=%b, mem_write=%b, alu_src=%b, alu_op=%b",
-                 reg_write, mem_write, alu_src, alu_op);
-        $display("  Expected: reg_write=1, mem_write=0, alu_src=1 (immediate)");
-        if (reg_write==1 && mem_write==0 && alu_src==1) $display("  PASS\n");
+        $display("  reg_write=%b, mem_write=%b, alu_src_b=%b, alu_op=%b",
+                 reg_write, mem_write, alu_src_b, alu_op);
+        $display("  Expected: reg_write=1, mem_write=0, alu_src_b=1 (immediate)");
+        if (reg_write==1 && mem_write==0 && alu_src_b==1) $display("  PASS\n");
         else $display("  FAIL\n");
         
         // Test 7: NEG (0110)

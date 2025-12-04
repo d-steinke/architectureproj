@@ -38,10 +38,12 @@ module tb_dmem;
 
         // Test 2: Write to address 0
         @(posedge clk);
+        #1;
         mem_write = 1;
         address = 32'd0;
         write_data = 32'hDEAD_BEEF;
         @(posedge clk);
+        #1;
 
         // Test 3: Read back from address 0
         mem_write = 0;
@@ -52,14 +54,17 @@ module tb_dmem;
 
         // Test 4: Write to multiple addresses
         @(posedge clk);
+        #1;
         mem_write = 1;
         address = 32'd10;
         write_data = 32'hCAFE_BABE;
         @(posedge clk);
+        #1;
 
         address = 32'd20;
         write_data = 32'h5555_5555;
         @(posedge clk);
+        #1;
 
         // Test 5: Read from different addresses
         mem_write = 0;
@@ -81,10 +86,12 @@ module tb_dmem;
 
         // Test 8: Disabled write (mem_write = 0)
         @(posedge clk);
+        #1;
         mem_write = 0;
         address = 32'd0;
         write_data = 32'hFFFF_FFFF;
         @(posedge clk);
+        #1;
 
         address = 32'd0;
         #10;

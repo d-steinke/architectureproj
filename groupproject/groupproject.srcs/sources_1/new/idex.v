@@ -40,8 +40,8 @@ module idex (
     input wire id_reg_write,
     input wire id_mem_to_reg,
     input wire id_mem_write,
-    input wire id_alu_src_a,  // NEW
-    input wire id_alu_src_b,  // Renamed
+    input wire id_alu_src_a,  
+    input wire id_alu_src_b,  
     input wire [2:0] id_alu_op,
     input wire id_branch,
     input wire id_jump,
@@ -69,7 +69,7 @@ module idex (
     output reg ex_preserve_flags
 );
 
-    always @(posedge clk) begin
+    always @(negedge clk) begin
         if (rst || flush) begin
             // Reset or flush: insert NOP (no writes, no branches)
             ex_pc <= 32'd0;

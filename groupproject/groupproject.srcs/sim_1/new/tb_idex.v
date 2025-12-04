@@ -6,22 +6,27 @@
 
 module tb_idex;
 
-    reg clk, rst;
+    reg clk, rst, flush;
     reg [31:0] id_pc, id_reg_data1, id_reg_data2, id_imm;
     reg [5:0] id_rd, id_rs, id_rt;
+    reg [3:0] id_opcode;
     reg id_reg_write, id_mem_to_reg, id_mem_write;
-    reg id_alu_src, id_branch, id_jump;
+    reg id_alu_src_a, id_alu_src_b, id_branch, id_jump;
     reg [2:0] id_alu_op;
+    reg id_preserve_flags;
     
     wire [31:0] ex_pc, ex_reg_data1, ex_reg_data2, ex_imm;
     wire [5:0] ex_rd, ex_rs, ex_rt;
+    wire [3:0] ex_opcode;
     wire ex_reg_write, ex_mem_to_reg, ex_mem_write;
-    wire ex_alu_src, ex_branch, ex_jump;
+    wire ex_alu_src_a, ex_alu_src_b, ex_branch, ex_jump;
     wire [2:0] ex_alu_op;
+    wire ex_preserve_flags;
 
     idex UUT (
         .clk(clk),
         .rst(rst),
+        .flush(flush),
         .id_pc(id_pc),
         .id_reg_data1(id_reg_data1),
         .id_reg_data2(id_reg_data2),
@@ -29,13 +34,16 @@ module tb_idex;
         .id_rd(id_rd),
         .id_rs(id_rs),
         .id_rt(id_rt),
+        .id_opcode(id_opcode),
         .id_reg_write(id_reg_write),
         .id_mem_to_reg(id_mem_to_reg),
         .id_mem_write(id_mem_write),
-        .id_alu_src(id_alu_src),
+        .id_alu_src_a(id_alu_src_a),
+        .id_alu_src_b(id_alu_src_b),
         .id_alu_op(id_alu_op),
         .id_branch(id_branch),
         .id_jump(id_jump),
+        .id_preserve_flags(id_preserve_flags),
         .ex_pc(ex_pc),
         .ex_reg_data1(ex_reg_data1),
         .ex_reg_data2(ex_reg_data2),
@@ -43,13 +51,16 @@ module tb_idex;
         .ex_rd(ex_rd),
         .ex_rs(ex_rs),
         .ex_rt(ex_rt),
+        .ex_opcode(ex_opcode),
         .ex_reg_write(ex_reg_write),
         .ex_mem_to_reg(ex_mem_to_reg),
         .ex_mem_write(ex_mem_write),
-        .ex_alu_src(ex_alu_src),
+        .ex_alu_src_a(ex_alu_src_a),
+        .ex_alu_src_b(ex_alu_src_b),
         .ex_alu_op(ex_alu_op),
         .ex_branch(ex_branch),
-        .ex_jump(ex_jump)
+        .ex_jump(ex_jump),
+        .ex_preserve_flags(ex_preserve_flags)
     );
 
     initial begin
@@ -72,7 +83,8 @@ module tb_idex;
         id_reg_write = 1;
         id_mem_to_reg = 1;
         id_mem_write = 1;
-        id_alu_src = 1;
+        id_alu_src_a = 0;
+        id_alu_src_b = 1;
         id_alu_op = 3'b101;
         id_branch = 1;
         id_jump = 1;
@@ -94,7 +106,8 @@ module tb_idex;
         id_reg_write = 1;
         id_mem_to_reg = 0;
         id_mem_write = 0;
-        id_alu_src = 1;
+        id_alu_src_a = 0;
+        id_alu_src_b = 1;
         id_alu_op = 3'b000;
         id_branch = 0;
         id_jump = 0;
@@ -115,10 +128,10 @@ module tb_idex;
                  (ex_reg_data1 == 1111 && ex_reg_data2 == 2222) ? "PASS" : "FAIL");
 
         // Test 5: Control signals captured
-        $display("Test 5 - Control: reg_write=%b, mem_to_reg=%b, mem_write=%b, alu_src=%b %s",
-                 ex_reg_write, ex_mem_to_reg, ex_mem_write, ex_alu_src,
+        $display("Test 5 - Control: reg_write=%b, mem_to_reg=%b, mem_write=%b, alu_src_b=%b %s",
+                 ex_reg_write, ex_mem_to_reg, ex_mem_write, ex_alu_src_b,
                  (ex_reg_write == 1 && ex_mem_to_reg == 0 && 
-                  ex_mem_write == 0 && ex_alu_src == 1) ? "PASS" : "FAIL");
+                  ex_mem_write == 0 && ex_alu_src_b == 1) ? "PASS" : "FAIL");
 
         // Test 6: ALU operation and branch signals
         $display("Test 6 - ALU op=%b (Expected 000), branch=%b, jump=%b %s",

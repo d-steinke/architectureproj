@@ -20,19 +20,19 @@ module tb_branchctl;
     initial begin
         $display("========== BRANCH CONTROL TESTBENCH ==========\n");
 
-        // Test 1: BRZ with zero_flag = 0 (should branch)
+        // Test 1: BRZ with zero_flag = 0 (should NOT branch)
         opcode = 4'b1001;  // BRZ
         zero_flag = 0;
         neg_flag = 0;
         #5;
-        $display("Test 1 - BRZ (1001) with zero_flag=0: branch_taken=%b (Expected 1) %s",
-                 branch_taken, (branch_taken == 1) ? "PASS" : "FAIL");
+        $display("Test 1 - BRZ (1001) with zero_flag=0: branch_taken=%b (Expected 0) %s",
+                 branch_taken, (branch_taken == 0) ? "PASS" : "FAIL");
 
-        // Test 2: BRZ with zero_flag = 1 (should NOT branch)
+        // Test 2: BRZ with zero_flag = 1 (should branch)
         zero_flag = 1;
         #5;
-        $display("Test 2 - BRZ (1001) with zero_flag=1: branch_taken=%b (Expected 0) %s",
-                 branch_taken, (branch_taken == 0) ? "PASS" : "FAIL");
+        $display("Test 2 - BRZ (1001) with zero_flag=1: branch_taken=%b (Expected 1) %s",
+                 branch_taken, (branch_taken == 1) ? "PASS" : "FAIL");
 
         // Test 3: BRN with neg_flag = 1 (should branch)
         opcode = 4'b1010;  // BRN
