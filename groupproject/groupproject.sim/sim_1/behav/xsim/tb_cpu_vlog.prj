@@ -20,7 +20,7 @@ verilog xil_defaultlib  --include "../../../../../../../../../Apps/Xilinx/2025.1
 "../../../../groupproject.srcs/sources_1/new/pc.v" \
 "../../../../groupproject.srcs/sources_1/new/regfile.v" \
 "../../../../groupproject.srcs/sources_1/new/wb_stage.v" \
-"../../../../groupproject.srcs/sim_1/new/tb_cpu2.v" \
+"../../../../groupproject.srcs/sim_1/new/tb_cpu.v" \
 
 # compile glbl module
 verilog xil_defaultlib "glbl.v"

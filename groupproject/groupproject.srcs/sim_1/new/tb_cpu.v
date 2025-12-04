@@ -170,15 +170,6 @@ module tb_cpu;
         $display("dmem[209] = %0d", CPU_UUT.MEM_STAGE.DATA_MEM.mem[209]);
         $display("========================================\n");
         
-        #20; 
-
-        $display("\n========================================");
-        $display("FINAL MEMORY DUMP (Output Array b[])");
-        $display("========================================");
-        
-        for (i = 200; i < 210; i = i + 1) begin 
-            $display("dmem[%0d] = %d", i, CPU_UUT.MEM_STAGE.DATA_MEM.mem[i]);
-        end
 
         $display("\n========================================");
         $display("  CPU Execution Complete");
